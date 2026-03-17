@@ -1,0 +1,30 @@
+{
+  "opendb_id": "11cee303-4a9c-465a-b467-f63525f3a755",
+  "metadata": {
+    "name": "be quiet! Light Wings 120mm Black PWM Addressable RGB",
+    "manufacturer": "be quiet!",
+    "part_numbers": ["BL072"],
+    "series": "Light",
+    "variant": "120mm Black",
+    "last_manually_spec_verified_at": "2026-03-05T23:33:13.163Z"
+  },
+  "size": 120,
+  "color": ["BLACK"],
+  "quantity": 1,
+  "min_airflow": 41.51,
+  "max_airflow": 70.5,
+  "min_noise_level": 20.6,
+  "max_noise_level": null,
+  "pwm": true,
+  "led": "Addressable RGB",
+  "connector": "4-pin PWM + 3-pin 5V Addressable RGB",
+  "controller": "None",
+  "static_pressure": 1.66,
+  "flow_direction": "Standard",
+  "isOEM": false,
+  "general_product_information": {
+    "amazon_sku": "B09KMDWYZZ",
+    "newegg_sku": "1YF-001D-000D6",
+    "manufacturer_url": "https://www.bequiet.com/en/casefans/3454"
+  }
+}
