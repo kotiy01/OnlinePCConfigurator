@@ -19,6 +19,7 @@ from django.urls import path
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from components.views import CPUViewSet, GPUViewSet, MotherboardViewSet, RAMViewSet, StorageViewSet, CaseViewSet, PowerSupplyViewSet, CPUCoolerViewSet, CaseFanViewSet
+from prices.views import ShopItemViewSet
 
 router = DefaultRouter()
 router.register(r'cpu', CPUViewSet, basename='cpu')
@@ -30,6 +31,8 @@ router.register(r'case', CaseViewSet)
 router.register(r'psu', PowerSupplyViewSet)
 router.register(r'cooler', CPUCoolerViewSet)
 router.register(r'fan', CaseFanViewSet)
+
+router.register(r'prices', ShopItemViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
