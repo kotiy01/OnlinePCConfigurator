@@ -16,7 +16,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from components.views import CPUViewSet, GPUViewSet, MotherboardViewSet, RAMViewSet, StorageViewSet, CaseViewSet, PowerSupplyViewSet, CPUCoolerViewSet, CaseFanViewSet
+
+router = DefaultRouter()
+router.register(r'cpu', CPUViewSet, basename='cpu')
+router.register(r'gpu', GPUViewSet)
+router.register(r'motherboard', MotherboardViewSet)
+router.register(r'ram', RAMViewSet)
+router.register(r'storage', StorageViewSet)
+router.register(r'case', CaseViewSet)
+router.register(r'psu', PowerSupplyViewSet)
+router.register(r'cooler', CPUCoolerViewSet)
+router.register(r'fan', CaseFanViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('api/', include(router.urls)),
 ]

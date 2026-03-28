@@ -1,3 +1,95 @@
 from django.shortcuts import render
+from rest_framework import viewsets, filters
+from django_filters.rest_framework import DjangoFilterBackend
+from .models import CPU, GPU, Motherboard, RAM, Storage, Case, PowerSupply, CPUCooler, CaseFan
+from .serializers import CPUSerializer, GPUSerializer, MotherboardSerializer, RAMSerializer, StorageSerializer, CaseSerializer, PowerSupplySerializer, CPUCoolerSerializer, CaseFanSerializer
 
-# Create your views here.
+class CPUViewSet(viewsets.ReadOnlyModelViewSet):
+    """ API для просмотра процессоров """
+    queryset = CPU.objects.filter(is_verified=True)
+    serializer_class = CPUSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['socket', 'brand', 'cores_total', 'base_clock', 'boost_clock']
+    search_fields = ['name', 'brand', 'series']
+    ordering_fields = ['price']
+    ordering = ['brand', 'name']
+
+class GPUViewSet(viewsets.ReadOnlyModelViewSet):
+    """ API для просмотра видеокарт """
+    queryset = GPU.objects.filter(is_verified=True)
+    serializer_class = GPUSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['memory', 'brand', 'memory_type', 'interface']
+    search_fields = ['name', 'brand', 'series']
+    ordering_fields = ['price']
+    ordering = ['brand', 'name']
+
+class MotherboardViewSet(viewsets.ReadOnlyModelViewSet):
+    """ API для просмотра материнских плат """
+    queryset = Motherboard.objects.filter(is_verified=True)
+    serializer_class = MotherboardSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['socket', 'brand', 'form_factor', 'chipset', 'memory_type']
+    search_fields = ['name', 'brand', 'series']
+    ordering_fields = ['price']
+    ordering = ['brand', 'name']
+
+class RAMViewSet(viewsets.ReadOnlyModelViewSet):
+    """ API для просмотра оперативной памяти """
+    queryset = RAM.objects.filter(is_verified=True)
+    serializer_class = RAMSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['total_capacity', 'brand', 'speed', 'ram_type', 'modules_quantity']
+    search_fields = ['name', 'brand', 'series']
+    ordering_fields = ['price']
+    ordering = ['brand', 'name']
+
+class StorageViewSet(viewsets.ReadOnlyModelViewSet):
+    """ API для просмотра накопителей """
+    queryset = Storage.objects.filter(is_verified=True)
+    serializer_class = StorageSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['capacity', 'brand', 'type', 'form_factor', 'interface']
+    search_fields = ['name', 'brand', 'series']
+    ordering_fields = ['price']
+    ordering = ['brand', 'name']
+
+class CaseViewSet(viewsets.ReadOnlyModelViewSet):
+    """ API для просмотра корпусов """
+    queryset = Case.objects.filter(is_verified=True)
+    serializer_class = CaseSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['case_type', 'brand', 'supported_motherboard_form_factors', 'has_transparent_side_panel']
+    search_fields = ['name', 'brand', 'series']
+    ordering_fields = ['price']
+    ordering = ['brand', 'name']
+
+class PowerSupplyViewSet(viewsets.ReadOnlyModelViewSet):
+    """ API для просмотра блоков питания """
+    queryset = PowerSupply.objects.filter(is_verified=True)
+    serializer_class = PowerSupplySerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['wattage', 'brand', 'form_factor', 'efficiency_rating']
+    search_fields = ['name', 'brand', 'series']
+    ordering_fields = ['price']
+    ordering = ['brand', 'name']
+
+class CPUCoolerViewSet(viewsets.ReadOnlyModelViewSet):
+    """ API для просмотра охлаждения процессора """
+    queryset = CPUCooler.objects.filter(is_verified=True)
+    serializer_class = CPUCoolerSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['cpu_sockets', 'brand', 'water_cooled', 'fan_quantity']
+    search_fields = ['name', 'brand', 'series']
+    ordering_fields = ['price']
+    ordering = ['brand', 'name']
+
+class CaseFanViewSet(viewsets.ReadOnlyModelViewSet):
+    """ API для просмотра вентиляторов """
+    queryset = CaseFan.objects.filter(is_verified=True)
+    serializer_class = CaseFanSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['size', 'brand', 'quantity', 'led', 'flow_direction']
+    search_fields = ['name', 'brand', 'series']
+    ordering_fields = ['price']
+    ordering = ['brand', 'name']
