@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from components.views import CPUViewSet, GPUViewSet, MotherboardViewSet, RAMViewSet, StorageViewSet, CaseViewSet, PowerSupplyViewSet, CPUCoolerViewSet, CaseFanViewSet
+from components.views import CPUViewSet, GPUViewSet, MotherboardViewSet, RAMViewSet, StorageViewSet, CaseViewSet, PowerSupplyViewSet, CPUCoolerViewSet, CaseFanViewSet, compatibility_check
 from prices.views import ShopItemViewSet
 
 router = DefaultRouter()
@@ -38,3 +38,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('api/', include(router.urls)),
 ]
+
+path('api/check-compatibility/', compatibility_check, name='compatibility_check'),

@@ -3,6 +3,9 @@ from rest_framework import viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import CPU, GPU, Motherboard, RAM, Storage, Case, PowerSupply, CPUCooler, CaseFan
 from .serializers import CPUSerializer, GPUSerializer, MotherboardSerializer, RAMSerializer, StorageSerializer, CaseSerializer, PowerSupplySerializer, CPUCoolerSerializer, CaseFanSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from compatibility.checker import check_compatibility
 
 class CPUViewSet(viewsets.ReadOnlyModelViewSet):
     """ API для просмотра процессоров """
@@ -93,3 +96,13 @@ class CaseFanViewSet(viewsets.ReadOnlyModelViewSet):
     search_fields = ['name', 'brand', 'series']
     ordering_fields = ['price']
     ordering = ['brand', 'name']
+
+
+@api_view(['POST'])
+def compatibility_check(request):
+    build = request.data.get('build', {})
+    compatible, messages = check_compatibility(build)
+    return Response({
+        'compatible': compatible,
+        'messages': messages,
+    })
