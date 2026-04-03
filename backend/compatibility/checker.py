@@ -1,4 +1,4 @@
-from .rules import check_full_compatibility, calculate_total_power
+from .rules import check_full_compatibility#, calculate_total_power
 
 def check_compatibility(build):
     """ Загружает объекты из БД и возвращает результат """

@@ -6,8 +6,26 @@ from .serializers import CPUSerializer, GPUSerializer, MotherboardSerializer, RA
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from compatibility.checker import check_compatibility
+from django.db.models import Exists, OuterRef
+from prices.models import ShopItem
+from django.contrib.contenttypes.models import ContentType
 
-class CPUViewSet(viewsets.ReadOnlyModelViewSet):
+class HasPricesMixin:
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        has_prices = self.request.query_params.get('has_prices')
+        if has_prices and has_prices.lower() == 'true':
+            content_type = ContentType.objects.get_for_model(self.queryset.model)
+            queryset = queryset.filter(
+                Exists(ShopItem.objects.filter(
+                    content_type=content_type,
+                    object_id=OuterRef('id'),
+                    in_stock=True
+                ))
+            )
+        return queryset
+
+class CPUViewSet(HasPricesMixin, viewsets.ReadOnlyModelViewSet):
     """ API для просмотра процессоров """
     queryset = CPU.objects.filter(is_verified=True)
     serializer_class = CPUSerializer
@@ -17,7 +35,7 @@ class CPUViewSet(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ['price']
     ordering = ['brand', 'name']
 
-class GPUViewSet(viewsets.ReadOnlyModelViewSet):
+class GPUViewSet(HasPricesMixin, viewsets.ReadOnlyModelViewSet):
     """ API для просмотра видеокарт """
     queryset = GPU.objects.filter(is_verified=True)
     serializer_class = GPUSerializer
@@ -27,7 +45,7 @@ class GPUViewSet(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ['price']
     ordering = ['brand', 'name']
 
-class MotherboardViewSet(viewsets.ReadOnlyModelViewSet):
+class MotherboardViewSet(HasPricesMixin, viewsets.ReadOnlyModelViewSet):
     """ API для просмотра материнских плат """
     queryset = Motherboard.objects.filter(is_verified=True)
     serializer_class = MotherboardSerializer
@@ -37,7 +55,7 @@ class MotherboardViewSet(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ['price']
     ordering = ['brand', 'name']
 
-class RAMViewSet(viewsets.ReadOnlyModelViewSet):
+class RAMViewSet(HasPricesMixin, viewsets.ReadOnlyModelViewSet):
     """ API для просмотра оперативной памяти """
     queryset = RAM.objects.filter(is_verified=True)
     serializer_class = RAMSerializer
@@ -47,7 +65,7 @@ class RAMViewSet(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ['price']
     ordering = ['brand', 'name']
 
-class StorageViewSet(viewsets.ReadOnlyModelViewSet):
+class StorageViewSet(HasPricesMixin, viewsets.ReadOnlyModelViewSet):
     """ API для просмотра накопителей """
     queryset = Storage.objects.filter(is_verified=True)
     serializer_class = StorageSerializer
@@ -57,7 +75,7 @@ class StorageViewSet(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ['price']
     ordering = ['brand', 'name']
 
-class CaseViewSet(viewsets.ReadOnlyModelViewSet):
+class CaseViewSet(HasPricesMixin, viewsets.ReadOnlyModelViewSet):
     """ API для просмотра корпусов """
     queryset = Case.objects.filter(is_verified=True)
     serializer_class = CaseSerializer
@@ -67,7 +85,7 @@ class CaseViewSet(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ['price']
     ordering = ['brand', 'name']
 
-class PowerSupplyViewSet(viewsets.ReadOnlyModelViewSet):
+class PowerSupplyViewSet(HasPricesMixin, viewsets.ReadOnlyModelViewSet):
     """ API для просмотра блоков питания """
     queryset = PowerSupply.objects.filter(is_verified=True)
     serializer_class = PowerSupplySerializer
@@ -77,7 +95,7 @@ class PowerSupplyViewSet(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ['price']
     ordering = ['brand', 'name']
 
-class CPUCoolerViewSet(viewsets.ReadOnlyModelViewSet):
+class CPUCoolerViewSet(HasPricesMixin, viewsets.ReadOnlyModelViewSet):
     """ API для просмотра охлаждения процессора """
     queryset = CPUCooler.objects.filter(is_verified=True)
     serializer_class = CPUCoolerSerializer
@@ -87,7 +105,7 @@ class CPUCoolerViewSet(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ['price']
     ordering = ['brand', 'name']
 
-class CaseFanViewSet(viewsets.ReadOnlyModelViewSet):
+class CaseFanViewSet(HasPricesMixin, viewsets.ReadOnlyModelViewSet):
     """ API для просмотра вентиляторов """
     queryset = CaseFan.objects.filter(is_verified=True)
     serializer_class = CaseFanSerializer

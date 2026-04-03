@@ -30,13 +30,12 @@ router.register(r'storage', StorageViewSet)
 router.register(r'case', CaseViewSet)
 router.register(r'psu', PowerSupplyViewSet)
 router.register(r'cooler', CPUCoolerViewSet)
-router.register(r'fan', CaseFanViewSet)
+router.register(r'casefan', CaseFanViewSet)
 
 router.register(r'prices', ShopItemViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('api/', include(router.urls)),
+    path('api/check-compatibility/', compatibility_check, name='compatibility_check'),
 ]
-
-path('api/check-compatibility/', compatibility_check, name='compatibility_check'),

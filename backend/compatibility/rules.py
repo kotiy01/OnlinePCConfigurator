@@ -130,31 +130,31 @@ def check_motherboard_case(motherboard, case):
 
     return not errors, errors + warnings
 
-def check_gpu_psu(gpu, psu, total_power):
-    """
-    Проверка видеокарты и блока питания.
-    total_power — суммарное энергопотребление сборки (можно рассчитать отдельно).
-    Учитывает мощность, разъёмы питания.
-    """
-    if not gpu or not psu:
-        return True, []
+# def check_gpu_psu(gpu, psu, total_power):
+#     """
+#     Проверка видеокарты и блока питания.
+#     total_power — суммарное энергопотребление сборки (можно рассчитать отдельно).
+#     Учитывает мощность, разъёмы питания.
+#     """
+#     if not gpu or not psu:
+#         return True, []
 
-    errors = []
-    warnings = []
+#     errors = []
+#     warnings = []
 
-    # Разъемы питания
-    if gpu.power_connectors and psu.connectors:
-        # gpu.power_connectors {"pcie_8_pin": 2}
-        # psu.connectors {"pcie_6_plus_2_pin": 2}
-        required_8pin = gpu.power_connectors.get('pcie_8_pin', 0)
-        required_6pin = gpu.power_connectors.get('pcie_6_pin', 0)
-        available = psu.connectors.get('pcie_6_plus_2_pin', 0) # 8-pin
-        if required_8pin > available:
-            errors.append(f"Видеокарте требуется {required_8pin} 8-pin разъемов, в БП только {available}.")
-    else:
-        warnings.append("Не удалось проверить разъемы питания, убедитесь, что БП имеет нужные коннекторы.")
+#     # Разъемы питания
+#     if gpu.power_connectors and psu.connectors:
+#         # gpu.power_connectors {"pcie_8_pin": 2}
+#         # psu.connectors {"pcie_6_plus_2_pin": 2}
+#         required_8pin = gpu.power_connectors.get('pcie_8_pin', 0)
+#         required_6pin = gpu.power_connectors.get('pcie_6_pin', 0)
+#         available = psu.connectors.get('pcie_6_plus_2_pin', 0) # 8-pin
+#         if required_8pin > available:
+#             errors.append(f"Видеокарте требуется {required_8pin} 8-pin разъемов, в БП только {available}.")
+#     else:
+#         warnings.append("Не удалось проверить разъемы питания, убедитесь, что БП имеет нужные коннекторы.")
 
-    return not errors, errors + warnings
+#     return not errors, errors + warnings
 
 def check_gpu_case(gpu, case):
     """ Проверка совместимости видеокарты и корпуса по длине """
@@ -229,7 +229,7 @@ def calculate_total_power(build):
             total += comp.tdp
         # Добавить другие компоненты, потребляющие энергию (допустим, по 5 Вт на модуль RAM)
     # Запас 50-100 Вт
-    return total + 50  # небольшой запас
+    return total + 50
 
 def check_full_compatibility(build):
     """ Проверка всей сборки """
@@ -250,7 +250,7 @@ def check_full_compatibility(build):
         check_motherboard_ram(motherboard, ram),
         check_cpu_cooler(cpu, cooler),
         check_motherboard_case(motherboard, case),
-        check_gpu_psu(gpu, psu if gpu and psu else 0),
+        # check_gpu_psu(gpu, psu if gpu and psu else 0),
         check_gpu_case(gpu, case),
         check_psu_case(psu, case),
         check_storage_motherboard(storage, motherboard),
