@@ -18,20 +18,29 @@
             v-for="comp in filteredComponents"
             :key="comp.id"
             class="component-card modal-overlay__component-card"
-            @click="selectComponent(comp)"
+            @click="openDetail(comp)"
           >
             <h3 class="component-card__name">{{ comp.name }}</h3>
             <p class="component-card__specs">{{ shortSpecs(comp) }}</p>
+            <p class="component-card__price">От {{ comp.min_price }} ₽</p>
           </div>
         </div>
       </div>
     </div>
+    <ComponentDetailModal
+      v-if="selectedComponent"
+      :component="selectedComponent"
+      :category-key="categoryKey"
+      @close="selectedComponent = null"
+      @select="onSelectFromDetail"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import api from '../api/index'
+import ComponentDetailModal from './ComponentDetailModal.vue'
 
 const props = defineProps({
   categoryKey: String,
@@ -43,6 +52,7 @@ const emit = defineEmits(['close', 'select'])
 const searchQuery = ref('')
 const components = ref([])
 const loading = ref(true)
+const selectedComponent = ref(null)
 
 const filteredComponents = computed(() => {
   if (!searchQuery.value) return components.value
@@ -91,8 +101,14 @@ function shortSpecs(comp) {
   return ''
 }
 
-function selectComponent(comp) {
-  emit('select', comp)
+function openDetail(comp) {
+  selectedComponent.value = comp
+}
+
+function onSelectFromDetail(shopItem) {
+  emit('select', shopItem)
+  selectedComponent.value = null
+  emit('close')
 }
 </script>
 
@@ -112,7 +128,7 @@ function selectComponent(comp) {
   &__container {
     background: white;
     width: 90%;
-    max-width: 900px;
+    max-width: 1200px;
     max-height: 85vh;
     border-radius: 12px;
     display: flex;
@@ -169,12 +185,16 @@ function selectComponent(comp) {
 
   &__components-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
     gap: 16px;
   }
 }
 
 .component-card {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   padding: 1rem;
@@ -193,8 +213,22 @@ function selectComponent(comp) {
   }
 
   &__specs {
-    font-size: 12px;
+    font-size: 14px;
+    margin-bottom: 8px;
     color: #666;
+  }
+
+  &__price {
+    font-size: 16px;
+    font-weight: 500;
+    padding: 6px;
+    color: white;
+    background-color: #4361ee;
+    border-radius: 4px;
+    
+    &:hover {
+      background-color: #4895ef;
+    }
   }
 }
 </style>

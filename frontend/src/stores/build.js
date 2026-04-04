@@ -25,14 +25,7 @@ export const useBuildStore = defineStore('build', {
         }
       }
       return sum
-    },
-
-    isComplete: (state) => {
-      return state.components.cpu && 
-             state.components.motherboard && 
-             state.components.ram && 
-             state.components.psu
-    },
+    }
   },
 
   actions: {

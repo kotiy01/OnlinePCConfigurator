@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <header class="app-header">
-      <p class="app-header__title">Онлайн-конфигуратор ПК</p>
+    <header class="app__header header">
+      <p class="header__title">Онлайн-конфигуратор ПК</p>
     </header>
     <router-view />
-    <footer class="app-footer">
+    <footer class="app__footer footer">
       <p>© 2026 Онлайн-конфигуратор ПК.</p>
     </footer>
   </div>
@@ -28,7 +28,7 @@ body {
   flex-direction: column;
 }
 
-.app-header {
+.header {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -42,7 +42,7 @@ body {
   }
 }
 
-.app-footer {
+.footer {
   display: flex;
   justify-content: center;
   align-items: center;

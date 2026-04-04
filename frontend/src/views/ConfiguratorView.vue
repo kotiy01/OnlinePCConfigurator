@@ -35,15 +35,15 @@ import ComponentSelectorModal from '../components/ComponentSelectorModal.vue'
 const buildStore = useBuildStore()
 
 const categories = [
-  { key: 'cpu', label: 'Процессор', icon: 'cpu' },
-  { key: 'motherboard', label: 'Материнская плата', icon: 'motherboard' },
-  { key: 'ram', label: 'Оперативная память', icon: 'ram' },
-  { key: 'gpu', label: 'Видеокарта', icon: 'gpu' },
-  { key: 'cooler', label: 'Охлаждение процессора', icon: 'cooler' },
-  { key: 'storage', label: 'Накопитель', icon: 'storage' },
-  { key: 'psu', label: 'Блок питания', icon: 'psu' },
-  { key: 'case', label: 'Корпус', icon: 'case' },
-  { key: 'casefan', label: 'Корпусное охлаждение', icon: 'caseFan' },
+  { key: 'cpu', label: 'Процессор', emptytext: 'Не выбран' },
+  { key: 'motherboard', label: 'Материнская плата', emptytext: 'Не выбрана' },
+  { key: 'ram', label: 'Оперативная память', emptytext: 'Не выбрана' },
+  { key: 'gpu', label: 'Видеокарта', emptytext: 'Не выбрана' },
+  { key: 'cooler', label: 'Охлаждение процессора', emptytext: 'Не выбрано' },
+  { key: 'storage', label: 'Накопитель', emptytext: 'Не выбран' },
+  { key: 'psu', label: 'Блок питания', emptytext: 'Не выбран' },
+  { key: 'case', label: 'Корпус', emptytext: 'Не выбран' },
+  { key: 'casefan', label: 'Корпусное охлаждение', emptytext: 'Не выбрано' },
 ]
 
 const modalVisible = ref(false)

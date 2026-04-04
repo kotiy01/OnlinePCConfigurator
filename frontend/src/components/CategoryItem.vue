@@ -42,7 +42,7 @@
         </div>
         <div class="category-item__empty-block">
             <h3 class="category-item__title">{{ category.label }}</h3>
-            <p class="category-item__empty-text">Ничего не выбрано</p>
+            <p class="category-item__empty-text">{{ category.emptytext }}</p>
         </div>
         <div class="category-item__order-block">
             <button class="category-item__btn" @click="$emit('select')">Выбрать</button>
@@ -118,8 +118,8 @@ const getCategoryIcon = (key) => {
     }
 
     &__name, &__title, &__price {
-        font-size: 32px;
-        line-height: 32px;
+        font-size: 28px;
+        line-height: 28px;
     }
 
     &__name, &__price {
@@ -127,9 +127,14 @@ const getCategoryIcon = (key) => {
     }
 
     &__shop-name, &__empty-text, &__compatibility {
-        font-size: 24px;
-        line-height: 24px;
+        font-size: 22px;
+        line-height: 22px;
         margin-top: 8px;
+    }
+
+    &__empty-text {
+        font-size: 18px;
+        color: #666;
     }
 
     &__order-block {

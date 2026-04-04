@@ -9,7 +9,7 @@
           <div class="price selected-list__price">{{ formatPrice(buildStore.components[cat.key].min_price) }} ₽</div>
         </div>
       </div>
-      <div v-else class="empty selected-list__empty">Не выбран</div>
+      <div v-else class="empty selected-list__empty">{{ cat.label }} {{cat.emptytext }}</div>
     </div>
     <div class="total selected-list__total">
       <strong class="selected-list__total-price">Итого:</strong> {{ formatPrice(buildStore.totalPrice) }} ₽
@@ -23,15 +23,15 @@ import { useBuildStore } from '../stores/build'
 const buildStore = useBuildStore()
 
 const categories = [
-  { key: 'cpu', label: 'Процессор', icon: 'cpu' },
-  { key: 'motherboard', label: 'Материнская плата', icon: 'motherboard' },
-  { key: 'ram', label: 'Оперативная память', icon: 'ram' },
-  { key: 'gpu', label: 'Видеокарта', icon: 'gpu' },
-  { key: 'cooler', label: 'Охлаждение процессора', icon: 'cooler' },
-  { key: 'storage', label: 'Накопитель', icon: 'storage' },
-  { key: 'psu', label: 'Блок питания', icon: 'psu' },
-  { key: 'case', label: 'Корпус', icon: 'case' },
-  { key: 'casefan', label: 'Корпусное охлаждение', icon: 'casefan' },
+  { key: 'cpu', label: 'Процессор', emptytext: 'не выбран' },
+  { key: 'motherboard', label: 'Материнская плата', emptytext: 'не выбрана' },
+  { key: 'ram', label: 'Оперативная память', emptytext: 'не выбрана' },
+  { key: 'gpu', label: 'Видеокарта', emptytext: 'не выбрана' },
+  { key: 'cooler', label: 'Охлаждение процессора', emptytext: 'не выбрано' },
+  { key: 'storage', label: 'Накопитель', emptytext: 'не выбран' },
+  { key: 'psu', label: 'Блок питания', emptytext: 'не выбран' },
+  { key: 'case', label: 'Корпус', emptytext: 'не выбран' },
+  { key: 'casefan', label: 'Корпусное охлаждение', emptytext: 'не выбрано' },
 ]
 
 const formatPrice = (price) => {
@@ -96,6 +96,10 @@ const formatPrice = (price) => {
   &__price {
     font-size: 16px;
     font-weight: 500;
+  }
+
+  &__empty {
+    color: #666;
   }
 }
 </style>
