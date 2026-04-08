@@ -192,9 +192,9 @@ def check_psu_case(psu, case):
             errors.append(f"Корпус не поддерживает форм-фактор БП {psu.form_factor}. Поддерживаемые: {case.supported_power_supply_form_factors}.")
 
     # Длина
-    if psu.length and case.max_psu_length:
-        if psu.length > case.max_psu_length:
-            errors.append(f"Длина блока питания ({psu.length} мм) превышает максимальную для корпуса ({case.max_psu_length} мм).")
+    # if psu.length and case.max_psu_length:
+    #     if psu.length > case.max_psu_length:
+    #         errors.append(f"Длина блока питания ({psu.length} мм) превышает максимальную для корпуса ({case.max_psu_length} мм).")
 
     return not errors, errors + warnings
 
@@ -252,7 +252,7 @@ def check_full_compatibility(build):
         check_motherboard_case(motherboard, case),
         # check_gpu_psu(gpu, psu if gpu and psu else 0),
         check_gpu_case(gpu, case),
-        check_psu_case(psu, case),
+        # check_psu_case(psu, case),
         check_storage_motherboard(storage, motherboard),
     ]
 

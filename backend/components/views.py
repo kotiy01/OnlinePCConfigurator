@@ -5,7 +5,7 @@ from .models import CPU, GPU, Motherboard, RAM, Storage, Case, PowerSupply, CPUC
 from .serializers import CPUSerializer, GPUSerializer, MotherboardSerializer, RAMSerializer, StorageSerializer, CaseSerializer, PowerSupplySerializer, CPUCoolerSerializer, CaseFanSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from compatibility.checker import check_compatibility
+from compatibility.checker import check_compatibility_for_component
 from django.db.models import Exists, OuterRef
 from prices.models import ShopItem
 from django.contrib.contenttypes.models import ContentType
@@ -118,8 +118,15 @@ class CaseFanViewSet(HasPricesMixin, viewsets.ReadOnlyModelViewSet):
 
 @api_view(['POST'])
 def compatibility_check(request):
+    """ Проверка совместимости конкретного компонента со сборкой """
     build = request.data.get('build', {})
-    compatible, messages = check_compatibility(build)
+    component_key = request.data.get('component_key')
+    component_id = request.data.get('component_id')
+    
+    if not component_key or not component_id:
+        return Response({'compatible': True, 'messages': []})
+    
+    compatible, messages = check_compatibility_for_component(build, component_key, component_id)
     return Response({
         'compatible': compatible,
         'messages': messages,

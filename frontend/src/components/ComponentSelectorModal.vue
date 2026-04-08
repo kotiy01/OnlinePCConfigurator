@@ -22,7 +22,7 @@
           >
             <h3 class="component-card__name">{{ comp.name }}</h3>
             <p class="component-card__specs">{{ shortSpecs(comp) }}</p>
-            <p class="component-card__price">От {{ comp.min_price }} ₽</p>
+            <p class="component-card__price">Выбрать от {{ comp.min_price }} ₽</p>
           </div>
         </div>
       </div>
@@ -146,15 +146,18 @@ function onSelectFromDetail(shopItem) {
   }
 
   &__title {
-    font-size: 24px;
+    font-size: 28px;
+    font-weight: 700;
   }
 
   &__close-btn {
     background: none;
     border: none;
-    font-size: 24px;
+    font-size: 28px;
+    font-weight: 700;
     cursor: pointer;
     color: #999;
+    transition: 0.2s;
 
     &:hover {
       color: red;
@@ -169,10 +172,10 @@ function onSelectFromDetail(shopItem) {
 
   &__search-input {
     width: 100%;
-    padding: 0.75rem;
+    padding: 16px;
     border: 1px solid #e0e0e0;
-    border-radius: 6px;
-    font-size: 16px;
+    border-radius: 4px;
+    font-size: 18px;
     margin-bottom: 16px;
     box-sizing: border-box;
   }
@@ -197,31 +200,31 @@ function onSelectFromDetail(shopItem) {
   flex-direction: column;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 1rem;
+  padding: 16px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: 0.2s;
 
   &:hover {
-    border-color: #4895ef;
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
   }
 
   &__name {
     font-weight: 700;
     margin-bottom: 8px;
-    font-size: 16px;
+    font-size: 22px;
   }
 
   &__specs {
-    font-size: 14px;
+    font-size: 16px;
+    font-weight: 400;
     margin-bottom: 8px;
     color: #666;
   }
 
   &__price {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
-    padding: 6px;
+    padding: 8px;
     color: white;
     background-color: #4361ee;
     border-radius: 4px;

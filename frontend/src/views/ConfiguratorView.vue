@@ -60,28 +60,33 @@ function openSelector(categoryKey, categoryLabel) {
   modalVisible.value = true
 }
 
-async function onComponentSelected(component) {
-  // Формирование текущей сборки для проверки совместимости
-  const buildPayload = {}
-  for (const key in buildStore.components) {
-    if (buildStore.components[key]) {
-      buildPayload[key] = buildStore.components[key].id
-    }
-  }
-  buildPayload[currentCategory.value] = component.id
+// async function onComponentSelected(component) {
+//   // Формирование текущей сборки для проверки совместимости
+//   const buildPayload = {}
+//   for (const key in buildStore.components) {
+//     if (buildStore.components[key]) {
+//       buildPayload[key] = buildStore.components[key].id
+//     }
+//   }
+//   buildPayload[currentCategory.value] = component.id
 
-  try {
-    const response = await api.post('/check-compatibility/', { build: buildPayload })
-    if (response.data.compatible) {
-      buildStore.addComponent(currentCategory.value, component)
-    } else {
-      alert('Несовместимо:\n' + (response.data.messages || []).join('\n'))
-    }
-  } catch (error) {
-    console.error('Ошибка проверки совместимости', error)
-    // Без проверки, если API не работает
-    buildStore.addComponent(currentCategory.value, component)
-  }
+//   try {
+//     const response = await api.post('/check-compatibility/', { build: buildPayload })
+//     if (response.data.compatible) {
+//       buildStore.addComponent(currentCategory.value, component)
+//     } else {
+//       alert('Несовместимо:\n' + (response.data.messages || []).join('\n'))
+//     }
+//   } catch (error) {
+//     console.error('Ошибка проверки совместимости', error)
+//     // Без проверки, если API не работает
+//     buildStore.addComponent(currentCategory.value, component)
+//   }
+//   modalVisible.value = false
+// }
+
+function onComponentSelected(selectedItem) {
+  buildStore.addComponent(currentCategory.value, selectedItem)
   modalVisible.value = false
 }
 </script>

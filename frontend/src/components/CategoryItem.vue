@@ -16,6 +16,7 @@
         </div>
         <div class="category-item__info-block">
             <h3 class="category-item__name">{{ selectedComponent.name }}</h3>
+            <p class="category-item__specs"></p>
             <a
                 v-if="selectedComponent.url"
                 :href="selectedComponent.url"
@@ -28,7 +29,25 @@
         </div>
         <div class="category-item__order-block">
             <span class="category-item__price">{{ formatPrice(selectedComponent.price) }} ₽</span>
-            <span class="category-item__compatibility">Совместимость</span>
+            <div 
+                class="category-item__compatibility-wrapper"
+                :class="{ 'incompatible': !isCompatible, 'compatible': isCompatible }"
+            >
+                <span 
+                    class="category-item__compatibility"
+                    :data-tooltip="compatibilityMessage"
+                    @mouseenter="showTooltip = true"
+                    @mouseleave="showTooltip = false"
+                >
+                    {{ compatibilityText }}
+                </span>
+                <div 
+                    v-if="showTooltip && !isCompatible && compatibilityMessage"
+                    class="category-item__tooltip"
+                >
+                    {{ compatibilityMessage }}
+                </div>
+            </div>
             <button class="category-item__btn_red" @click="$emit('remove')">Удалить</button>
         </div>
     </div>
@@ -51,6 +70,10 @@
 </template>
 
 <script setup>
+import { computed, ref, watch } from 'vue'
+import { useBuildStore } from '../stores/build'
+import api from '../api'
+
 const props = defineProps({
   category: {
     type: Object,
@@ -63,6 +86,53 @@ const props = defineProps({
 })
 
 defineEmits(['select', 'remove'])
+
+const buildStore = useBuildStore()
+const showTooltip = ref(false)
+const compatibilityInfo = ref({ compatible: true, message: '' })
+
+watch(
+  () => [props.selectedComponent, buildStore.components],
+  async () => {
+    if (props.selectedComponent) {
+      await checkCompatibility()
+    }
+  },
+  { deep: true }
+)
+
+async function checkCompatibility() {
+  if (!props.selectedComponent) return
+  
+  const buildPayload = {}
+  for (const [key, component] of Object.entries(buildStore.components)) {
+    if (component && component.id && key !== props.category.key) {
+      buildPayload[key] = component.id
+    }
+  }
+  
+  try {
+    const response = await api.post('/check-compatibility/', {
+      build: buildPayload,
+      component_key: props.category.key,
+      component_id: props.selectedComponent.id
+    })
+    compatibilityInfo.value = {
+      compatible: response.data.compatible,
+      message: response.data.messages?.join(' ') || ''
+    }
+  } catch (error) {
+    console.error('Ошибка проверки совместимости:', error)
+    compatibilityInfo.value = {
+      compatible: true,
+      message: 'Не удалось проверить совместимость'
+    }
+  }
+}
+
+const isCompatible = computed(() => compatibilityInfo.value.compatible)
+const compatibilityText = computed(() => isCompatible.value ? 'Совместимо' : 'Не совместимо')
+const compatibilityMessage = computed(() => compatibilityInfo.value.message)
 
 const formatPrice = (price) => {
   return price ? price.toLocaleString('ru-RU') : '0'
@@ -119,17 +189,61 @@ const getCategoryIcon = (key) => {
 
     &__name, &__title, &__price {
         font-size: 28px;
-        line-height: 28px;
+        // line-height: 28px;
     }
 
     &__name, &__price {
-        font-weight: 500;
+        font-weight: 700;
+    }
+
+    &__name {
+        width: 100%;
+        // height: 28px;
+        overflow-x: hidden;
+        overflow-y: clip;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
 
     &__shop-name, &__empty-text, &__compatibility {
         font-size: 22px;
         line-height: 22px;
-        margin-top: 8px;
+        // padding-top: 4px;
+        // padding-bottom: 4px;
+        margin-bottom: 8px;
+    }
+
+    &__compatibility-wrapper {
+        height: 22px;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        // cursor: pointer;
+
+        &.compatible {
+            color: green;
+        }
+
+        &.incompatible {
+            color: red;
+            cursor: help;
+        }
+    }
+
+    &__tooltip {
+        position: absolute;
+        // bottom: 100%;
+        // left: 50%;
+        transform: translateX(-35%);
+        // margin-bottom: 8px;
+        background-color: #333;
+        color: #fff;
+        max-width: 600px;
+        // height: 100px;
+        padding: 8px;
+        border-radius: 4px;
+        font-size: 16px;
+        // white-space: nowrap;
+        z-index: 1000;
     }
 
     &__empty-text {
@@ -152,7 +266,8 @@ const getCategoryIcon = (key) => {
         border-radius: 4px;
         border: none;
         cursor: pointer;
-        font-size: 24px;
+        font-size: 22px;
+        font-weight: 500;
         transition: 0.2s;
 
         &:hover {
@@ -165,6 +280,8 @@ const getCategoryIcon = (key) => {
             cursor: pointer;
             color: red;
             margin-top: 8px;
+            padding-top: 4px;
+            padding-bottom: 4px;
         }
     }
 }

@@ -153,7 +153,7 @@ function selectShop(shop) {
     background-color: #fff;
     width: 90%;
     max-height: 85vh;
-    max-width: 800px;
+    max-width: 982px;
     border-radius: 12px;
   }
 
@@ -166,14 +166,15 @@ function selectShop(shop) {
   }
 
   &__title {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 700;
   }
 
   &__close-btn {
     background: none;
     border: none;
-    font-size: 24px;
+    font-size: 28px;
+    font-weight: 700;
     cursor: pointer;
     color: #999;
 
@@ -192,7 +193,7 @@ function selectShop(shop) {
   }
 
   &__specs-title, &__shops-title {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
     margin-bottom: 8px;
   }
@@ -209,13 +210,13 @@ function selectShop(shop) {
   }
 
   &__spec-label {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 700;
     padding: 4px 0 4px 0;
   }
 
   &__spec-label {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
     padding: 4px 0 4px 0;
   }
@@ -229,7 +230,7 @@ function selectShop(shop) {
   border-radius: 8px;
   padding: 12px;
   margin-bottom: 8px;
-  width: 768px;
+  width: 950px;
 
   &__img-block {
     width: 80px;
@@ -247,25 +248,33 @@ function selectShop(shop) {
     justify-content: flex-start;
     align-items: flex-start;
     flex-direction: column;
-    width: 652px;
+    width: 830px;
   }
 
   &__info-block {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     width: 100%;
   }
 
   &__item-name {
-    font-size: 18px;
+    font-size: 28px;
+    line-height: 28px;
     font-weight: 700;
-    // margin-bottom: 8px;
+    margin-bottom: 8px;
   }
 
   &__link, &__in-stock, &__out-of-stock, &__price {
-    font-size: 16px;
+    font-size: 22px;
     padding: 8px 0 8px 0;
+  }
+
+  &__link {
+    color: #4361ee;
+    text-decoration: underline;
+    font-weight: 500;
+    width: 360px;
   }
 
   &__in-stock {
@@ -282,8 +291,8 @@ function selectShop(shop) {
 
   &__select-btn {
     padding: 8px;
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 22px;
+    font-weight: 500;
     color: white;
     background-color: #4361ee;
     border-radius: 4px;
@@ -296,43 +305,4 @@ function selectShop(shop) {
     }
   }
 }
-// .shop-name {
-//   font-weight: bold;
-//   flex: 1;
-// }
-// .shop-price {
-//   font-size: 1.1rem;
-//   font-weight: bold;
-//   color: #2c3e50;
-// }
-// .shop-stock {
-//   font-size: 0.8rem;
-//   color: green;
-// }
-// .shop-stock.out-of-stock {
-//   color: red;
-// }
-// .shop-link {
-//   color: #016FFF;
-//   text-decoration: none;
-//   font-size: 0.9rem;
-// }
-// .shop-link:hover {
-//   text-decoration: underline;
-// }
-// .select-btn {
-//   background: #dc2f2f;
-//   color: white;
-//   border: none;
-//   border-radius: 4px;
-//   padding: 0.3rem 0.8rem;
-//   cursor: pointer;
-// }
-// .select-btn:hover {
-//   background: #b32424;
-// }
-// .no-shops {
-//   color: #999;
-//   font-style: italic;
-// }
 </style>
