@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 class SavePipeline:
     def process_item(self, item, spider):
         data = {
-            'shop_name': item.get('shop_name', 'regard.ru'),
+            'shop_name': item.get('shop_name'),
             'shop_item_id': item.get('shop_item_id', ''),
             'name': item.get('name', ''),
             'price': item.get('price'),

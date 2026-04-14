@@ -190,6 +190,8 @@ function selectShop(shop) {
     flex-direction: column;
     padding: 16px;
     width: 100%;
+    overflow-y: auto;
+    flex: 1;
   }
 
   &__specs-title, &__shops-title {
@@ -229,7 +231,7 @@ function selectShop(shop) {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 12px;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
   width: 950px;
 
   &__img-block {
@@ -259,8 +261,8 @@ function selectShop(shop) {
   }
 
   &__item-name {
-    font-size: 28px;
-    line-height: 28px;
+    font-size: 24px;
+    line-height: 24px;
     font-weight: 700;
     margin-bottom: 8px;
   }

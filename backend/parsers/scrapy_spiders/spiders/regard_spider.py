@@ -25,7 +25,7 @@ class RegardSpider(scrapy.Spider):
         'CONCURRENT_REQUESTS_PER_DOMAIN': 1, # только один запрос за раз
         'AUTOTHROTTLE_ENABLED': True,        # автоматическое управление скоростью
         'AUTOTHROTTLE_START_DELAY': 1,
-        'AUTOTHROTTLE_MAX_DELAY': 10,
+        'AUTOTHROTTLE_MAX_DELAY': 8,
         'AUTOTHROTTLE_TARGET_CONCURRENCY': 1.0,
         'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'COOKIES_ENABLED': True,
