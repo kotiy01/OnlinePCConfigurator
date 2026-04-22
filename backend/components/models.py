@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Commit с обновленными данными: [skip ci] Automated opendb sync - 2026-03-15T17:53:05.041Z
 
@@ -273,3 +274,12 @@ class PowerSupply(BaseComponent):
     class Meta:
         verbose_name = "Блок питания"
         verbose_name_plural = "Блоки питания"
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    avatar = models.URLField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Профиль {self.user.username}"

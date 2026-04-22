@@ -3,6 +3,8 @@ from .models import CPU, GPU, Motherboard, RAM, Storage, Case, PowerSupply, CPUC
 from django.contrib.contenttypes.models import ContentType
 from prices.models import ShopItem
 from django.db import models
+from django.contrib.auth.models import User
+from .models import Profile
 
 class BaseComponentSerializer(serializers.ModelSerializer):
     # name = serializers.SerializerMethodField()
@@ -112,3 +114,32 @@ class CaseFanSerializer(BaseComponentSerializer):
     class Meta:
         model = CaseFan
         fields = '__all__'
+
+class UserSerializer(serializers.ModelSerializer):
+    avatar = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'avatar', 'date_joined')
+
+    def get_avatar(self, obj):
+        return obj.profile.avatar if hasattr(obj, 'profile') else None
+
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, min_length=6)
+    password2 = serializers.CharField(write_only=True, min_length=6)
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password', 'password2')
+
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError({'password': 'Пароли не совпадают'})
+        return data
+
+    def create(self, validated_data):
+        validated_data.pop('password2')
+        user = User.objects.create_user(**validated_data)
+        Profile.objects.create(user=user)
+        return user

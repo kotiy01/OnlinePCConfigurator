@@ -1,14 +1,16 @@
 <template>
   <div id="app">
-    <header class="app__header header">
-      <p class="header__title">Онлайн-конфигуратор ПК</p>
-    </header>
+    <HeaderComponent />
     <router-view />
     <footer class="app__footer footer">
       <p>© 2026 Онлайн-конфигуратор ПК.</p>
     </footer>
   </div>
 </template>
+
+<script setup>
+import HeaderComponent from './components/HeaderComponent.vue'
+</script>
 
 <style lang="scss">
 * {
@@ -28,21 +30,9 @@ body {
   flex-direction: column;
 }
 
-.header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 80px;
-  background: #4361ee;
-  color: white;
-
-  &__title {
-    font-size: 30px;
-    font-weight: bold;
-  }
-}
-
 .footer {
+  position: relative;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -50,5 +40,7 @@ body {
   color: white;
   font-size: 14px;
   height: 50px;
+  bottom: 0;
+  margin-top: auto;
 }
 </style>
