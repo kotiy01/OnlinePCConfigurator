@@ -20,7 +20,7 @@ from rest_framework.routers import DefaultRouter
 from components.views import CPUViewSet, GPUViewSet, MotherboardViewSet, RAMViewSet, StorageViewSet, CaseViewSet, PowerSupplyViewSet, CPUCoolerViewSet, CaseFanViewSet, compatibility_check
 from prices.views import ShopItemViewSet
 from rest_framework_simplejwt.views import TokenRefreshView
-from components.views_auth import RegisterView, LoginView, LogoutView, ProfileView
+from components.views_auth import RegisterView, LoginView, LogoutView, ProfileView, SavedBuildListCreateView, SavedBuildRetrieveUpdateDestroyView, PublicBuildView
 
 router = DefaultRouter()
 router.register(r'cpu', CPUViewSet, basename='cpu')
@@ -44,4 +44,7 @@ urlpatterns = [
     path('api/auth/logout/', LogoutView.as_view(), name='logout'),
     path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/auth/profile/', ProfileView.as_view(), name='profile'),
+    path('api/saved-builds/', SavedBuildListCreateView.as_view(), name='saved-builds'),
+    path('api/saved-builds/<int:pk>/', SavedBuildRetrieveUpdateDestroyView.as_view(), name='saved-build-detail'),
+    path('api/public-build/<int:build_id>/', PublicBuildView.as_view(), name='public-build'),
 ]

@@ -10,6 +10,18 @@
 
 <script setup>
 import HeaderComponent from './components/HeaderComponent.vue'
+import { watch } from 'vue'
+import { useAuthStore } from './stores/auth'
+import { useBuildStore } from './stores/build'
+
+const authStore = useAuthStore()
+const buildStore = useBuildStore()
+
+watch(() => authStore.isAuthenticated, async (isAuth) => {
+  if (isAuth) {
+    await buildStore.loadSavedBuilds()
+  }
+}, { immediate: true })
 </script>
 
 <style lang="scss">

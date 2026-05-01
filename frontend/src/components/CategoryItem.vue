@@ -24,7 +24,7 @@
                 rel="noopener noreferrer"
                 class="category-item__shop-name"
             >
-                {{ selectedComponent.shop_name }}
+                В магазине {{ selectedComponent.shop_name }}
             </a>
         </div>
         <div class="category-item__order-block">
@@ -201,7 +201,7 @@ const getCategoryIcon = (key) => {
         // height: 28px;
         overflow-x: hidden;
         overflow-y: clip;
-        white-space: nowrap;
+        // white-space: nowrap;
         text-overflow: ellipsis;
     }
 
@@ -220,7 +220,7 @@ const getCategoryIcon = (key) => {
         // cursor: pointer;
 
         &.compatible {
-            color: green;
+            color: #00bb00;
         }
 
         &.incompatible {
@@ -231,18 +231,12 @@ const getCategoryIcon = (key) => {
 
     &__tooltip {
         position: absolute;
-        // bottom: 100%;
-        // left: 50%;
         transform: translateX(-35%);
-        // margin-bottom: 8px;
         background-color: #333;
         color: #fff;
         max-width: 600px;
-        // height: 100px;
         padding: 8px;
         border-radius: 4px;
-        font-size: 16px;
-        // white-space: nowrap;
         z-index: 1000;
     }
 

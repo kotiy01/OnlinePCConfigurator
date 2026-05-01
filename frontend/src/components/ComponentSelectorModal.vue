@@ -75,25 +75,28 @@ onMounted(async () => {
 
 function shortSpecs(comp) {
   if (props.categoryKey === 'cpu') {
-    return `${comp.cores_total || '?'} ядер, ${comp.socket || '?'}`
+    return `${comp.cores_total || '?'} ядер, ${comp.threads || '?'} потоков, ${comp.socket || '?'}, ${comp.base_clock || '?'} ГГц`
   }
   if (props.categoryKey === 'motherboard') {
     return `${comp.socket || '?'}, ${comp.form_factor || '?'}, ${comp.memory_type || '?'}`
   }
   if (props.categoryKey === 'gpu') {
-    return `${comp.memory || '?'} ГБ`
+    return `${comp.memory || '?'} ГБ, ${comp.memory_type || '?'}, ${comp.interface || '?'}`
   }
   if (props.categoryKey === 'ram') {
-    return `${comp.total_capacity || '?'} ГБ, ${comp.ram_type || '?'}`
+    return `${comp.ram_type || '?'}, ${comp.total_capacity || '?'} ГБ, ${comp.speed || '?'} МГц`
   }
   if (props.categoryKey === 'storage') {
-    return `${comp.capacity || '?'} ГБ, ${comp.interface || '?'}`
+    return `${comp.interface || '?'}, ${comp.capacity || '?'} ГБ,`
+  }
+  if (props.categoryKey === 'cooler') {
+    return `${comp.cpu_sockets || '?'}, высота ${comp.height || '?'} мм`
   }
   if (props.categoryKey === 'psu') {
-    return `${comp.wattage || '?'} Вт`
+    return `${comp.wattage || '?'} Вт, ${comp.form_factor || '?'}, ${comp.efficiency_rating || '?'}`
   }
   if (props.categoryKey === 'case') {
-    return `${comp.case_type || '?'}`
+    return `${comp.case_type || '?'}, ${comp.supported_motherboard_form_factors || '?'}`
   }
   if (props.categoryKey === 'casefan') {
     return `${comp.size || '?'} мм, ${comp.quantity || '?'} шт.`

@@ -76,6 +76,8 @@ const displaySpecs = computed(() => {
   // Общие для всех категорий
   if (component.brand) specs['Бренд'] = component.brand
   if (component.name) specs['Модель'] = component.name
+  if (component.release_year) specs['Год выпуска'] = component.release_year
+  if (component.part_numbers_json) specs['Коды производителя'] = component.part_numbers_json
 
   // Для CPU
   if (props.categoryKey === 'cpu') {
@@ -85,14 +87,30 @@ const displaySpecs = computed(() => {
     if (component.base_clock) specs['Базовая частота'] = `${component.base_clock} ГГц`
     if (component.boost_clock) specs['Макс. частота'] = `${component.boost_clock} ГГц`
     if (component.tdp) specs['TDP'] = `${component.tdp} Вт`
+    if (component.l2_cache) specs['L2 кэш'] = `${component.l2_cache} Мб`
+    if (component.l3_cache) specs['L3 кэш'] = `${component.l3_cache} Мб`
+    if (component.integrated_graphics) specs['Втроенная графика'] = component.integrated_graphics
+    if (component.max_memory) specs['Макс. память'] = `${component.max_memory} Гб`
+    if (component.memory_types) specs['Тип памяти'] = component.memory_types
   }
 
   // Для материнской платы
   if (props.categoryKey === 'motherboard') {
     if (component.socket) specs['Сокет'] = component.socket
     if (component.form_factor) specs['Форм-фактор'] = component.form_factor
+    if (component.chipset) specs['Чипсет'] = component.chipset
     if (component.memory_type) specs['Тип памяти'] = component.memory_type
     if (component.memory_slots) specs['Слоты памяти'] = component.memory_slots
+    if (component.memory_max) specs['Макс. память'] = `${component.memory_max} Гб`
+    if (component.color) specs['Цвет(а)'] = component.color
+    if (component.sata_6_gb_s) specs['Порты SATA'] = component.sata_6_gb_s
+    if (component.m2_slots) specs['Слоты M.2'] = component.m2_slots
+    if (component.raid_support) specs['Поддержка RAID'] = component.raid_support
+    // if (component.onboard_ethernet) specs['Встроенный Ethernet'] = component.onboard_ethernet
+    if (component.wireless) specs['Wi-Fi'] = component.wireless
+    if (component.audio) specs['Аудиочип'] = component.audio
+    // if (component.back_panel_ports) specs['Порты задней панели'] = component.back_panel_ports
+    // if (component.power_connectors) specs['Разъемы питания'] = component.power_connectors
   }
 
   // Для видеокарты
@@ -101,17 +119,96 @@ const displaySpecs = computed(() => {
     if (component.memory) specs['Память'] = `${component.memory} ГБ`
     if (component.memory_type) specs['Тип памяти'] = component.memory_type
     if (component.tdp) specs['TDP'] = `${component.tdp} Вт`
+    if (component.interface) specs['Интерфейс'] = component.interface
+    if (component.core_base_clock) specs['Базовая частота ядра'] = `${component.core_base_clock} МГц`
+    if (component.core_boost_clock) specs['Boost частота'] = `${component.core_boost_clock} МГц`
+    if (component.memory_bus) specs['Шина памяти'] = component.memory_bus
+    if (component.length) specs['Длина'] = `${component.length} мм`
+    if (component.case_expansion_slot_width) specs['Занимает слоов расширения'] = component.case_expansion_slot_width
+    if (component.power_connectors) specs['Разъемы питания'] = component.power_connectors
+    if (component.video_outputs) specs['Видеовыходы'] = component.video_outputs
+    if (component.core_count) specs['Видеовыходы'] = component.core_count
+    if (component.color) specs['Цвет'] = component.color
   }
 
   // Для RAM
   if (props.categoryKey === 'ram') {
     if (component.ram_type) specs['Тип'] = component.ram_type
-    if (component.total_capacity) specs['Объём'] = `${component.total_capacity} ГБ`
+    if (component.modules_quantity) specs['Количество модулей'] = component.modules_quantity
+    if (component.capacity_per_module) specs['Объем одного модуля'] = `${component.capacity_per_module} ГБ`
+    if (component.total_capacity) specs['Общий объем'] = `${component.total_capacity} ГБ`
+    if (component.ram_type) specs['Тип'] = component.ram_type
     if (component.speed) specs['Частота'] = `${component.speed} МГц`
     if (component.cas_latency) specs['CAS Latency'] = component.cas_latency
+    if (component.timings) specs['Тайминги'] = component.timings
+    // if (component.profile_support) specs['Поддерживаемые профили'] = component.profile_support
+    if (component.color) specs['Цвет(а)'] = component.color
   }
 
-  // Другие категории ...
+  // Для охлаждения процессора
+  if (props.categoryKey === 'cooler') {
+    if (component.cpu_sockets) specs['Совместимые сокеты'] = component.cpu_sockets
+    if (component.min_fan_rpm) specs['Мин. обороты вентилятора'] = component.min_fan_rpm
+    if (component.max_fan_rpm) specs['Макс. обороты вентилятора'] = component.max_fan_rpm
+    if (component.min_noise_level) specs['Мин. уровень шума'] = `${component.min_noise_level} Дб`
+    if (component.max_noise_level) specs['Макс. уровень шума'] = `${component.max_noise_level} Дб`
+    if (component.height) specs['Высота'] = `${component.height} мм`
+    if (component.water_cooled) specs['Водяное охлаждение'] = component.water_cooled
+    if (component.fan_quantity) specs['Количество вентиляторов'] = component.fan_quantity
+    if (component.radiator_size) specs['Размер радиатора'] = `${component.radiator_size} мм`
+    if (component.fan_size) specs['Размер вентилятора'] = `${component.fan_size} мм`
+    if (component.color) specs['Цвет(а)'] = component.color
+  }
+
+  // Для накопителей
+  if (props.categoryKey === 'storage') {
+    if (component.type) specs['Тип'] = component.type
+    if (component.capacity) specs['Объем'] = `${component.capacity} Гб`
+    if (component.form_factor) specs['Форм-фактор'] = component.form_factor
+    if (component.interface) specs['Интерфейс'] = component.interface
+    if (component.rpm) specs['Скорость вращения'] = `${component.rpm} RPM`
+  }
+
+  // Для блоков питания
+  if (props.categoryKey === 'psu') {
+    if (component.type) specs['Тип'] = component.type
+    if (component.wattage) specs['Мощность'] = `${component.wattage} Вт`
+    if (component.form_factor) specs['Форм-фактор'] = component.form_factor
+    if (component.efficiency_rating) specs['Сертификат эффективности'] = component.efficiency_rating
+    if (component.modular) specs['Модульность'] = component.modular
+    if (component.length) specs['Длина'] = `${component.length} мм`
+    if (component.connectors) specs['Разъемы'] = component.connectors
+  }
+
+  // Для корпусов
+  if (props.categoryKey === 'case') {
+    if (component.case_type) specs['Тип корпуса'] = component.case_type
+    if (component.supported_motherboard_form_factors) specs['Форм-факторы мат. плат'] = component.supported_motherboard_form_factors
+    if (component.side_panel) specs['Боковая панель'] = component.side_panel
+    if (component.front_panel_usb) specs['USB на передней панели'] = component.front_panel_usb
+    if (component.max_video_card_length) specs['Макс. длина видеокарты'] = `${component.max_video_card_length} мм`
+    if (component.max_cpu_cooler_height) specs['Макс. высота кулера CPU'] = `${component.max_cpu_cooler_height} мм`
+    if (component.internal_3_5_bays) specs['Внутренних отсеков 3.5 дюйма'] = component.internal_3_5_bays
+    if (component.internal_2_5_bays) specs['Внутренних отсеков 2.5 дюйма'] = component.internal_2_5_bays
+    if (component.expansion_slots) specs['Слоты расширения'] = component.expansion_slots
+    if (component.dimensions) specs['Габариты'] = `${component.dimensions} мм`
+    if (component.weight) specs['Габариты'] = `${component.weight} кг`
+    if (component.supported_power_supply_form_factors) specs['Форм-факторы БП'] = component.supported_power_supply_form_factors
+    if (component.color) specs['Цвет(а)'] = component.color
+  }
+
+  // Для корпусных вентиляторов
+  if (props.categoryKey === 'casefan') {
+    if (component.size) specs['Размер'] = `${component.size} мм`
+    if (component.quantity) specs['Штук в упаковке'] = component.quantity
+    if (component.min_airflow) specs['Мин. воздушный поток'] = `${component.min_airflow} CFM`
+    if (component.max_airflow) specs['Макс. воздушный поток'] = `${component.max_airflow} CFM`
+    if (component.min_noise_level) specs['Мин. уровень шума'] = `${component.min_noise_level} Дб`
+    if (component.max_noise_level) specs['Макс. уровень шума'] = `${component.max_noise_level} Дб`
+
+
+    if (component.color) specs['Цвет(а)'] = component.color
+  }
 
   return specs
 })
@@ -147,8 +244,6 @@ function selectShop(shop) {
 
   &__container {
     display: flex;
-    // justify-content: flex-start;
-    // align-items: flex-start;
     flex-direction: column;
     background-color: #fff;
     width: 90%;
@@ -185,8 +280,6 @@ function selectShop(shop) {
 
   &__main-section, &__shop-section {
     display: flex;
-    // justify-content: flex-start;
-    // align-items: flex-start;
     flex-direction: column;
     padding: 16px;
     width: 100%;
@@ -237,7 +330,6 @@ function selectShop(shop) {
   &__img-block {
     width: 80px;
     height: 80px;
-    // margin-right: 16px;
   }
 
   &__img {

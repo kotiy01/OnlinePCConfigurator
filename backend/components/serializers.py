@@ -4,16 +4,9 @@ from django.contrib.contenttypes.models import ContentType
 from prices.models import ShopItem
 from django.db import models
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, SavedBuild
 
 class BaseComponentSerializer(serializers.ModelSerializer):
-    # name = serializers.SerializerMethodField()
-    # shop_name = serializers.SerializerMethodField()
-    # price = serializers.SerializerMethodField()
-    # url = serializers.SerializerMethodField()
-    # image_url = serializers.SerializerMethodField()
-    # in_stock = serializers.SerializerMethodField()
-
     min_price = serializers.SerializerMethodField()
     shop_items = serializers.SerializerMethodField()
 
@@ -36,39 +29,6 @@ class BaseComponentSerializer(serializers.ModelSerializer):
             in_stock=True
         ).values('id', 'name', 'shop_name', 'in_stock', 'price', 'url', 'image_url').order_by('price')  # сортировка по цене
         return list(shop_items)
-
-    # def get_shop_item(self, obj):
-    #     model = obj._meta.model
-    #     ct = ContentType.objects.get_for_model(model)
-    #     return ShopItem.objects.filter(
-    #         content_type=ct,
-    #         object_id=obj.id,
-    #         in_stock=True
-    #     ).first()
-    
-    # def get_name(self, obj):
-    #     shop_item = self.get_shop_item(obj)
-    #     return shop_item.name if shop_item else None
-
-    # def get_shop_name(self, obj):
-    #     shop_item = self.get_shop_item(obj)
-    #     return shop_item.shop_name if shop_item else None
-
-    # def get_price(self, obj):
-    #     shop_item = self.get_shop_item(obj)
-    #     return shop_item.price if shop_item else None
-
-    # def get_url(self, obj):
-    #     shop_item = self.get_shop_item(obj)
-    #     return shop_item.url if shop_item else None
-
-    # def get_image_url(self, obj):
-    #     shop_item = self.get_shop_item(obj)
-    #     return shop_item.image_url if shop_item else None
-
-    # def get_in_stock(self, obj):
-    #     shop_item = self.get_shop_item(obj)
-    #     return shop_item.in_stock if shop_item else False
 
 class CPUSerializer(BaseComponentSerializer):
     class Meta:
@@ -115,6 +75,8 @@ class CaseFanSerializer(BaseComponentSerializer):
         model = CaseFan
         fields = '__all__'
 
+
+
 class UserSerializer(serializers.ModelSerializer):
     avatar = serializers.SerializerMethodField()
 
@@ -123,7 +85,9 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'email', 'first_name', 'last_name', 'avatar', 'date_joined')
 
     def get_avatar(self, obj):
-        return obj.profile.avatar if hasattr(obj, 'profile') else None
+        if hasattr(obj, 'profile') and obj.profile.avatar:
+            return obj.profile.avatar
+        return None
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=6)
@@ -143,3 +107,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         Profile.objects.create(user=user)
         return user
+
+class SavedBuildSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SavedBuild
+        fields = ('id', 'name', 'build_data', 'created_at', 'updated_at')

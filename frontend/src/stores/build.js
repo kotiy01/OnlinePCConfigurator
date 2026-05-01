@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import api from '../api'
 
 export const useBuildStore = defineStore('build', {
   state: () => ({
@@ -13,6 +14,8 @@ export const useBuildStore = defineStore('build', {
       case: null,
       casefan: null,
     },
+    savedBuilds: [],
+    currentBuildId: null,
   }),
 
   getters: {
@@ -69,5 +72,75 @@ export const useBuildStore = defineStore('build', {
         }
       }
     },
-  },
+
+    async saveCurrentBuild(name) {
+      const buildData = {
+        components: this.components,
+        totalPrice: this.totalPrice,
+      }
+      
+      try {
+        // Всегда создается новая сборка, не обновляются старые
+        const response = await api.post('/saved-builds/', {
+          name,
+          build_data: buildData
+        })
+        
+        this.currentBuildId = response.data.id
+        await this.loadSavedBuilds()
+        
+        return { success: true, data: response.data }
+      } catch (error) {
+        console.error('Error saving build:', error)
+        return { success: false, error: error.response?.data }
+      }
+    },
+    
+    async loadSavedBuilds() {
+      try {
+        const response = await api.get('/saved-builds/')
+        if (response.data.results) {
+          this.savedBuilds = response.data.results
+        } else if (Array.isArray(response.data)) {
+          this.savedBuilds = response.data
+        } else {
+          this.savedBuilds = []
+        }
+        // console.log('Loaded builds:', this.savedBuilds) // отладка
+        return { success: true, data: this.savedBuilds }
+      } catch (error) {
+        console.error('Error loading builds:', error)
+        this.savedBuilds = []
+        return { success: false, error: error.response?.data }
+      }
+    },
+    
+    async deleteSavedBuild(buildId) {
+      try {
+        await api.delete(`/saved-builds/${buildId}/`)
+        this.savedBuilds = this.savedBuilds.filter(b => b.id !== buildId)
+        
+        // Если удаляется текущая сборка, сбрасывается currentBuildId
+        if (this.currentBuildId === buildId) {
+          this.currentBuildId = null
+          this.isNewBuild = true
+        }
+        
+        return { success: true }
+      } catch (error) {
+        console.error('Error deleting build:', error)
+        return { success: false, error: error.response?.data }
+      }
+    },
+    
+    async loadBuildToConfigurator(build) {
+      if (build && build.build_data && build.build_data.components) {
+        this.clearBuild() // очистка конфигурации перед загрузкой новой
+        this.components = build.build_data.components
+        this.currentBuildId = build.id
+        return { success: true }
+      }
+      return { success: false, error: 'Некорректные данные сборки' }
+    }
+  }
 })

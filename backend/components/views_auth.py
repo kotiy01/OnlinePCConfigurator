@@ -5,6 +5,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from .serializers import RegisterSerializer, UserSerializer
+from rest_framework.parsers import JSONParser
+from .models import SavedBuild
+from .serializers import SavedBuildSerializer
+import json
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -73,3 +77,46 @@ class ProfileView(APIView):
 
         serializer = UserSerializer(user)
         return Response(serializer.data)
+    
+
+class SavedBuildListCreateView(generics.ListCreateAPIView):
+    serializer_class = SavedBuildSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        return SavedBuild.objects.filter(user=self.request.user).order_by('-updated_at')
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class SavedBuildRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = SavedBuildSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        return SavedBuild.objects.filter(user=self.request.user)
+    
+    
+
+class PublicBuildView(APIView):
+    permission_classes = [permissions.AllowAny]
+    
+    def get(self, request, build_id):
+        try:
+            build = SavedBuild.objects.get(id=build_id)
+            
+            result = {
+                'id': build.id,
+                'name': build.name,
+                'build_data': build.build_data
+            }
+            
+            print(f"PublicBuildView: returning build {build_id}")
+            return Response(result)
+            
+        except SavedBuild.DoesNotExist:
+            print(f"PublicBuildView: build {build_id} not found")
+            return Response({'error': 'Build not found'}, status=404)
+        except Exception as e:
+            print(f"PublicBuildView error: {e}")
+            return Response({'error': str(e)}, status=500)

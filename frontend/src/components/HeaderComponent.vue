@@ -36,7 +36,7 @@ async function handleLogout() {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 32px;
+  padding: 8px 32px;
   background: #4361ee;
   color: white;
 
@@ -63,6 +63,35 @@ async function handleLogout() {
     font-weight: 500;
     padding: 8px;
     color: #fff;
+  }
+
+  &__profile-link {
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: 500;
+    padding: 8px;
+    color: #fff;
+    text-decoration: none;
+    margin-right: 16px;
+  }
+
+  &__logout-btn {
+    font-size: 16px;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    background-color: #FF4444;
+    color: #fff;
+    transition: 0.2s;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &__user-menu {
+    display: flex;
+    align-items: center;
   }
 }
 </style>
