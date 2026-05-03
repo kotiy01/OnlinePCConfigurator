@@ -1,0 +1,105 @@
+# version: '3.8'
+
+services:
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: pc_config_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - pc_network
+
+  # Django
+  backend:
+    build: ./backend
+    container_name: pc_config_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - ./backend/db.sqlite3:/app/db.sqlite3
+    environment:
+      - DEBUG=True
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    command: python manage.py runserver 0.0.0.0:8000
+    networks:
+      - pc_network
+
+  # Celery Worker
+  celery:
+    build: ./backend
+    container_name: pc_config_celery
+    volumes:
+      - ./backend:/app
+      - ./backend/db.sqlite3:/app/db.sqlite3
+    environment:
+      - DEBUG=True
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    command: celery -A config worker --loglevel=info -P threads
+    networks:
+      - pc_network
+
+  celery-beat:
+    build: ./backend
+    container_name: pc_config_celery_beat
+    volumes:
+      - ./backend:/app
+      - ./backend/db.sqlite3:/app/db.sqlite3
+    environment:
+      - DEBUG=True
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    command: celery -A config beat --loglevel=info
+    networks:
+      - pc_network
+
+  # Vite dev
+  frontend:
+    build: ./frontend
+    container_name: pc_config_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend
+    networks:
+      - pc_network
+
+  # Flower
+  flower:
+    build: ./backend
+    container_name: pc_config_flower
+    ports:
+      - "5555:5555"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    command: celery -A config flower --port=5555 --address=0.0.0.0
+    networks:
+      - pc_network
+
+networks:
+  pc_network:
+    driver: bridge
+
+volumes:
+  redis_data:

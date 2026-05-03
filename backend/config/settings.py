@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+from celery.schedules import crontab
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +28,12 @@ SECRET_KEY = "django-insecure-je^d5n6q7o5o_)!n3g2uh1*ww*drqd%8e$^*^lgs&c)_o)t(*=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'backend',
+    '0.0.0.0',
+]
 
 
 # Application definition
@@ -159,3 +166,31 @@ SIMPLE_JWT = {
 }
 
 # AUTH_USER_MODEL = 'users.User'
+
+# Celery
+REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
+REDIS_PORT = os.getenv('REDIS_PORT', '6379')
+CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/0'
+CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{REDIS_PORT}/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Europe/Moscow'
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 240 * 60
+
+# Celery Beat
+CELERY_BEAT_SCHEDULE = {
+    'parse-regard-daily': {
+        'task': 'parsers.tasks.parse_regard',
+        'schedule': crontab(hour=2, minute=0),
+    },
+    'parse-pc4games-daily': {
+        'task': 'parsers.tasks.parse_pc4games',
+        'schedule': crontab(hour=3, minute=0),
+    },
+    'match-mpn-daily': {
+        'task': 'parsers.tasks.match_mpn',
+        'schedule': crontab(hour=9, minute=0),
+    },
+}

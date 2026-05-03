@@ -335,6 +335,7 @@ function selectShop(shop) {
   &__img {
     width: 80px;
     height: auto;
+    max-height: 80px;
   }
 
   &__content-block {
