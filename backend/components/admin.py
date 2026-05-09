@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import (
-    CPU, GPU, Motherboard, RAM, Storage, CPUCooler, Case, CaseFan, PowerSupply
+    CPU, GPU, Motherboard, RAM, Storage, CPUCooler, Case, CaseFan, PowerSupply, Profile, SavedBuild
 )
 
 # Базовый класс для настройки общих полей
@@ -64,3 +64,13 @@ class PowerSupplyAdmin(BaseComponentAdmin):
     list_display = ('name', 'brand', 'wattage', 'form_factor', 'efficiency_rating', 'modular')
     list_filter = ('brand', 'form_factor', 'efficiency_rating', 'modular')
     search_fields = ('name', 'brand')
+
+@admin.register(Profile)
+class Profile(admin.ModelAdmin):
+    list_display = ('user', 'created_at')
+    # search_fields = ('user')
+
+@admin.register(SavedBuild)
+class SavedBuild(admin.ModelAdmin):
+    list_display = ('user', 'name')
+    # search_fields = ('user')

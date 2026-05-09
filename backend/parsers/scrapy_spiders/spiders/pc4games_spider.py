@@ -108,7 +108,7 @@ class Pc4gamesSpider(scrapy.Spider):
                 meta={'item': item},
                 callback=self.parse_product_page,
                 dont_filter=True,
-                errback=self.handle_error
+                # errback=self.handle_error
             )
 
         # Пагинация

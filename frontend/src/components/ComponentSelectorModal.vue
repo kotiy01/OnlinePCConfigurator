@@ -447,6 +447,20 @@ function onSelectFromDetail(shopItem) {
     width: 260px;
     padding: 0;
   }
+
+  &__reset-btn {
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    background-color: #FF4444;
+    border-radius: 6px;
+    padding: 6px;
+    transition: 0.2s;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
 }
 
 .component-card {
