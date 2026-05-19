@@ -14,19 +14,19 @@
     <div class="selected-list__total">
       <strong class="selected-list__total-price">Итого:</strong> {{ formatPrice(buildStore.totalPrice) }} ₽
     </div>
-    <button class="save-build-btn" @click="openSaveModal">Сохранить сборку</button>
-    <div v-if="showSaveModal" class="modal-overlay" @click.self="closeSaveModal">
-      <div class="modal-content">
-        <h3>Сохранить сборку</h3>
+    <button class="selected-list__save-build-btn" @click="openSaveModal">Сохранить сборку</button>
+    <div v-if="showSaveModal" class="selected-list__modal-overlay" @click.self="closeSaveModal">
+      <div class="selected-list__modal-content">
+        <h3 class="selected-list__modal-title">Сохранить сборку</h3>
         <input 
           type="text" 
           v-model="buildName" 
           placeholder="Название сборки"
-          class="build-name-input"
+          class="selected-list__build-name-input"
         >
-        <div class="modal-buttons">
-          <button @click="saveBuild" class="save-btn">Сохранить</button>
-          <button @click="closeSaveModal" class="cancel-btn">Отмена</button>
+        <div class="selected-list__modal-buttons">
+          <button @click="saveBuild" class="selected-list__save-btn">Сохранить</button>
+          <button @click="closeSaveModal" class="selected-list__cancel-btn">Отмена</button>
         </div>
       </div>
     </div>
@@ -99,9 +99,21 @@ const saveBuild = async () => {
   width: 304px;
   height: fit-content;
 
+  @media screen and (max-width: 1080px) {
+    width: 600px;
+  }
+
+  @media screen and (max-width: 760px) {
+    width: 100%;
+  }
+
   &__title {
     font-size: 28px;
     font-weight: 700;
+
+    @media screen and (max-width: 760px) {
+      font-size: 24px;
+    }
   }
 
   &__item {
@@ -119,6 +131,10 @@ const saveBuild = async () => {
     align-items: flex-start;
     flex-direction: column;
     width: 268px;
+
+    @media screen and (max-width: 1080px) {
+      width: 100%;
+    }
   }
 
   &__name {
@@ -130,6 +146,26 @@ const saveBuild = async () => {
     overflow-y: clip;
     white-space: nowrap;
     text-overflow: ellipsis;
+
+    @media screen and (max-width: 1080px) {
+      width: 568px;
+    }
+
+    @media screen and (max-width: 760px) {
+      max-width: 500px;
+    }
+
+    @media screen and (max-width: 600px) {
+      max-width: 400px;
+    }
+
+    @media screen and (max-width: 490px) {
+      max-width: 300px;
+    }
+
+    @media screen and (max-width: 400px) {
+      max-width: 280px;
+    }
   }
 
   &__info-block {
@@ -155,71 +191,73 @@ const saveBuild = async () => {
     color: #666;
     border-bottom: 1px solid #e0e0e0;
   }
-}
 
+  &__save-build-btn {
+    width: 100%;
+    padding: 8px;
+    margin-top: 8px;
+    background: #00dc33;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+  }
 
+  &__modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
 
-.save-build-btn {
-  width: 100%;
-  padding: 0.75rem;
-  margin-top: 1rem;
-  background: #00dc33;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-}
+  &__modal-content {
+    background: white;
+    padding: 16px;
+    border-radius: 8px;
+    width: 300px;
+  }
 
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
+  &__build-name-input {
+    width: 100%;
+    padding: 8px;
+    margin: 16px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
 
-.modal-content {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  width: 300px;
-}
+  &__modal-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    width: 100%;
+  }
 
-.build-name-input {
-  width: 100%;
-  padding: 0.5rem;
-  margin: 1rem 0;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
+  &__save-btn {
+    background: #00dc33;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 66%;
+  }
 
-.modal-buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-}
-
-.save-btn {
-  background: #2ecc71;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.cancel-btn {
-  background: #e74c3c;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
+  &__cancel-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 30%;
+  }
 }
 </style>

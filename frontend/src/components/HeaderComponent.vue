@@ -40,12 +40,21 @@ async function handleLogout() {
   background: #4361ee;
   color: white;
 
+  @media screen and (max-width: 550px) {
+    padding: 6px 10px;
+  }
+
   &__link {
     color: white;
     text-decoration: none;
     font-size: 28px;
     font-weight: 700;
     line-height: 28px;
+
+    @media screen and (max-width: 550px) {
+      font-size: 18px;
+      line-height: 18px;
+    }
   }
 
   &__nav {
@@ -73,6 +82,12 @@ async function handleLogout() {
     color: #fff;
     text-decoration: none;
     margin-right: 16px;
+
+    @media screen and (max-width: 550px) {
+      font-size: 16px;
+      line-height: 16px;
+      margin-right: 6px;
+    }
   }
 
   &__logout-btn {
@@ -86,6 +101,11 @@ async function handleLogout() {
 
     &:hover {
       opacity: 0.8;
+    }
+
+    @media screen and (max-width: 550px) {
+      font-size: 14px;
+      padding: 6px;
     }
   }
 

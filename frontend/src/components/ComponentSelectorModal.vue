@@ -6,7 +6,7 @@
         <button class="modal-overlay__close-btn" @click="$emit('close')">✕</button>
       </div>
 
-      <div class="modal-overlay__content-block">
+      <div class="modal-overlay__content-block" ref="scrollContainer" @scroll="handleScroll">
         <input
           type="text"
           v-model="searchQuery"
@@ -123,6 +123,7 @@
               <p class="component-card__specs">{{ shortSpecs(comp) }}</p>
               <p class="component-card__price">Выбрать от {{ comp.min_price }} ₽</p>
             </div>
+            <div v-if="isLoadingMore" class="modal-overlay__loading-more">Загрузка...</div>
           </div>
         </div>
       </div>
@@ -150,9 +151,14 @@ const props = defineProps({
 const emit = defineEmits(['close', 'select'])
 
 const searchQuery = ref('')
-const components = ref([])
+const componentsList = ref([])
 const loading = ref(true)
 const selectedComponent = ref(null)
+
+const nextPageUrl = ref(null)
+const isLoadingMore = ref(false)
+const scrollContainer = ref(null)
+let currentPage = 1
 
 // Состояние фильтров
 const sortBy = ref('price_asc')
@@ -177,25 +183,6 @@ const filterOptions = ref({
   capacities: [],
 })
 
-
-// const filteredComponents = computed(() => {
-//   if (!searchQuery.value) return components.value
-//   const q = searchQuery.value.toLowerCase()
-//   return components.value.filter(c => c.name.toLowerCase().includes(q))
-// })
-
-onMounted(async () => {
-  try {
-    const response = await api.get(`/${props.categoryKey}/`, {
-      params: { has_prices: true }
-    })
-    components.value = response.data.results || response.data
-  } catch (error) {
-    console.error('Ошибка загрузки компонентов', error)
-  } finally {
-    loading.value = false
-  }
-})
 
 function shortSpecs(comp) {
   if (props.categoryKey === 'cpu') {
@@ -234,39 +221,54 @@ onMounted(async () => {
   await loadFilterOptions()
 })
 
-async function loadComponents() {
+async function loadComponents(reset = true) {
+  if (reset) {
+    loading.value = true
+    componentsList.value = []
+    currentPage = 1
+  }
+  
   try {
-    const response = await api.get(`/${props.categoryKey}/?has_prices=true`)
-    components.value = response.data.results || response.data
-    calculatePriceRange()
+    const response = await api.get(`/${props.categoryKey}/`, {
+      params: { has_prices: true, page: currentPage, page_size: 20 }
+    })
+    const newItems = response.data.results || response.data
+    
+    if (reset) {
+      componentsList.value = newItems
+    } else {
+      componentsList.value = [...componentsList.value, ...newItems]
+    }
+
+    nextPageUrl.value = newItems.length === 20 ? 'has_more' : null
+    
+    if (reset && componentsList.value.length) {
+      calculatePriceRange()
+      await loadFilterOptions()
+    }
   } catch (error) {
     console.error('Ошибка загрузки компонентов', error)
+  } finally {
+    loading.value = false
   }
 }
 
 async function loadFilterOptions() {
-  try {
-    const response = await api.get(`/${props.categoryKey}/`)
-
-    const items = components.value
-    
-    // Уникальные значения для фильтров из данных
-    const brands = [...new Set(items.map(c => c.brand).filter(b => b && b !== 'null' && b !== ''))]
-    const sockets = [...new Set(items.map(c => c.socket).filter(Boolean))]
-    const cores = [...new Set(items.map(c => c.cores_total).filter(Boolean))].sort((a, b) => a - b)
-    const memorySizes = [...new Set(items.map(c => c.memory).filter(Boolean))].sort((a, b) => a - b)
-    const formFactors = [...new Set(items.map(c => c.form_factor).filter(Boolean))]
-    const ramTypes = [...new Set(items.map(c => c.ram_type).filter(Boolean))]
-    const capacities = [...new Set(items.map(c => c.total_capacity).filter(Boolean))].sort((a, b) => a - b)
-    
-    filterOptions.value = { brands, sockets, cores, memorySizes, formFactors, ramTypes, capacities }
-  } catch (error) {
-    console.error('Ошибка загрузки фильтров', error)
-  }
+  const items = componentsList.value
+  
+  const brands = [...new Set(items.map(c => c.brand).filter(b => b && b !== 'null' && b !== ''))]
+  const sockets = [...new Set(items.map(c => c.socket).filter(Boolean))]
+  const cores = [...new Set(items.map(c => c.cores_total).filter(Boolean))].sort((a, b) => a - b)
+  const memorySizes = [...new Set(items.map(c => c.memory).filter(Boolean))].sort((a, b) => a - b)
+  const formFactors = [...new Set(items.map(c => c.form_factor).filter(Boolean))]
+  const ramTypes = [...new Set(items.map(c => c.ram_type).filter(Boolean))]
+  const capacities = [...new Set(items.map(c => c.total_capacity).filter(Boolean))].sort((a, b) => a - b)
+  
+  filterOptions.value = { brands, sockets, cores, memorySizes, formFactors, ramTypes, capacities }
 }
 
 function calculatePriceRange() {
-  const prices = components.value.map(c => c.min_price).filter(p => p)
+  const prices = componentsList.value.map(c => c.min_price).filter(p => p)
   if (prices.length) {
     priceRange.value.min = Math.min(...prices)
     priceRange.value.max = Math.max(...prices)
@@ -274,8 +276,27 @@ function calculatePriceRange() {
   }
 }
 
+async function loadMore() {
+  if (!nextPageUrl.value || isLoadingMore.value || loading.value) return
+  isLoadingMore.value = true
+  currentPage++
+  await loadComponents(false)
+  isLoadingMore.value = false
+  calculatePriceRange()
+  loadFilterOptions()
+}
+
+function handleScroll(e) {
+  const container = e.target
+  const scrollBottom = container.scrollHeight - container.scrollTop - container.clientHeight
+  
+  if (scrollBottom < 200 && nextPageUrl.value && !isLoadingMore.value && !loading.value) {
+    loadMore()
+  }
+}
+
 const filteredAndSortedComponents = computed(() => {
-  let result = [...components.value]
+  let result = [...componentsList.value]
   
   // Поиск
   if (searchQuery.value) {
@@ -340,9 +361,10 @@ function resetFilters() {
   maxPrice.value = priceRange.value.max
   searchQuery.value = ''
   sortBy.value = 'price_asc'
+  currentPage = 1
+  nextPageUrl.value = null
+  loadComponents(true)
 }
-
-
 
 function openDetail(comp) {
   selectedComponent.value = comp
@@ -377,6 +399,10 @@ function onSelectFromDetail(shopItem) {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+
+    @media screen and (max-width: 760px) {
+      width: 95%;
+    }
   }
 
   &__header {
@@ -386,11 +412,27 @@ function onSelectFromDetail(shopItem) {
     padding: 16px;
     border-bottom: 1px solid #e0e0e0;
     background: #f5f5f5;
+
+    @media screen and (max-width: 760px) {
+      padding: 12px;
+    }
+
+    @media screen and (max-width: 460px) {
+      padding: 8px;
+    }
   }
 
   &__title {
     font-size: 28px;
     font-weight: 700;
+
+    @media screen and (max-width: 760px) {
+      font-size: 22px;
+    }
+
+    @media screen and (max-width: 460px) {
+      font-size: 18px;
+    }
   }
 
   &__close-btn {
@@ -405,12 +447,29 @@ function onSelectFromDetail(shopItem) {
     &:hover {
       color: red;
     }
+
+    @media screen and (max-width: 760px) {
+      font-size: 22px;
+    }
+
+    @media screen and (max-width: 460px) {
+      font-size: 18px;
+    }
   }
 
   &__content-block {
     padding: 16px;
     overflow-y: auto;
     flex: 1;
+    max-height: 85vh;
+
+    @media screen and (max-width: 760px) {
+      padding: 12px;
+    }
+
+    @media screen and (max-width: 760px) {
+      padding: 8px;
+    }
   }
 
   &__content {
@@ -426,11 +485,30 @@ function onSelectFromDetail(shopItem) {
     font-size: 18px;
     margin-bottom: 16px;
     box-sizing: border-box;
+
+    @media screen and (max-width: 760px) {
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    @media screen and (max-width: 460px) {
+      font-size: 14px;
+    }
   }
 
   &__loading {
     text-align: center;
     padding: 32px;
+    color: #999;
+
+    @media screen and (max-width: 760px) {
+      padding: 12px;
+    }
+  }
+
+  &__loading-more {
+    text-align: center;
+    padding: 16px;
     color: #999;
   }
 
@@ -439,13 +517,27 @@ function onSelectFromDetail(shopItem) {
     margin-left: 16px;
     display: flex;
     flex-direction: column;
-    // grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-    // gap: 16px;
+
+    @media screen and (max-width: 760px) {
+      margin-left: 12px;
+    }
+
+    @media screen and (max-width: 460px) {
+      margin-left: 8px;
+    }
   }
 
   &__filters-sidebar {
     width: 260px;
     padding: 0;
+
+    @media screen and (max-width: 760px) {
+      width: 200px;
+    }
+
+    @media screen and (max-width: 460px) {
+      width: 120px;
+    }
   }
 
   &__reset-btn {
@@ -459,6 +551,10 @@ function onSelectFromDetail(shopItem) {
 
     &:hover {
       opacity: 0.8;
+    }
+
+    @media screen and (max-width: 460px) {
+      font-size: 14px;
     }
   }
 }
@@ -482,6 +578,14 @@ function onSelectFromDetail(shopItem) {
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
   }
 
+  @media screen and (max-width: 760px) {
+    padding: 12px;
+  }
+
+  @media screen and (max-width: 460px) {
+    padding: 8px;
+  }
+
   &__name {
     font-weight: 700;
     min-height: 28px;
@@ -494,6 +598,15 @@ function onSelectFromDetail(shopItem) {
     overflow-y: clip;
     // white-space: nowrap;
     text-overflow: ellipsis;
+
+    @media screen and (max-width: 760px) {
+      font-size: 20px;
+    }
+
+    @media screen and (max-width: 460px) {
+      font-size: 18px;
+      line-height: 20px;
+    }
   }
 
   &__specs {
@@ -501,6 +614,10 @@ function onSelectFromDetail(shopItem) {
     font-weight: 400;
     margin-bottom: 8px;
     color: #666;
+
+    @media screen and (max-width: 460px) {
+      font-size: 14px;
+    }
   }
 
   &__price {
@@ -515,6 +632,10 @@ function onSelectFromDetail(shopItem) {
     &:hover {
       background-color: #4895ef;
     }
+
+    @media screen and (max-width: 460px) {
+      font-size: 14px;
+    }
   }
 }
 
@@ -525,6 +646,10 @@ function onSelectFromDetail(shopItem) {
   &__title {
     font-size: 16px;
     font-weight: 700;
+
+    @media screen and (max-width: 460px) {
+      font-size: 14px;
+    }
   }
 
   &__select {
@@ -533,6 +658,10 @@ function onSelectFromDetail(shopItem) {
     font-weight: 500;
     border-radius: 4px;
     margin-top: 4px;
+
+    @media screen and (max-width: 460px) {
+      font-size: 14px;
+    }
   }
 
   &__input {
@@ -545,6 +674,10 @@ function onSelectFromDetail(shopItem) {
 
   &__label {
     font-size: 16px;
+
+    @media screen and (max-width: 460px) {
+      font-size: 14px;
+    }
   }
 }
 </style>

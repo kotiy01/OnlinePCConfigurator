@@ -135,12 +135,19 @@ function onComponentSelected(selectedItem) {
     font-size: 36px;
     font-weight: 700;
     margin-top: 24px;
-  }
+    text-align: center;
+    width: 90%;
+    line-height: 38px;
 
-  &__info {
-    display: flex;
-    width: 304px;
-    height: auto;
+    @media screen and (max-width: 760px) {
+      font-size: 28px;
+      line-height: 26px;
+    }
+
+    @media screen and (max-width: 550px) {
+      font-size: 22px;
+      line-height: 24px;
+    }
   }
 }
 
@@ -150,6 +157,16 @@ function onComponentSelected(selectedItem) {
   width: 1274px;
   margin: 0 auto;
   margin-top: 24px;
+
+  @media screen and (max-width: 1300px) {
+    width: 95%;
+  }
+
+  @media screen and (max-width: 1080px) {
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
 
   &__items {
     flex: 2;

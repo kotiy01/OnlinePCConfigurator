@@ -77,7 +77,7 @@ const displaySpecs = computed(() => {
   if (component.brand) specs['Бренд'] = component.brand
   if (component.name) specs['Модель'] = component.name
   if (component.release_year) specs['Год выпуска'] = component.release_year
-  if (component.part_numbers_json) specs['Коды производителя'] = component.part_numbers_json
+  if (component.mpn) specs['Код производителя'] = component.mpn
 
   // Для CPU
   if (props.categoryKey === 'cpu') {
@@ -250,6 +250,14 @@ function selectShop(shop) {
     max-height: 85vh;
     max-width: 982px;
     border-radius: 12px;
+
+    @media screen and (max-width: 760px) {
+      width: 93%;
+    }
+
+    @media screen and (max-width: 460px) {
+      width: 95%;
+    }
   }
 
   &__header {
@@ -258,11 +266,27 @@ function selectShop(shop) {
     align-items: center;
     padding: 16px;
     border-bottom: 1px solid #ddd;
+
+    @media screen and (max-width: 760px) {
+      padding: 12px;
+    }
+
+    @media screen and (max-width: 460px) {
+      padding: 8px;
+    }
   }
 
   &__title {
     font-size: 28px;
     font-weight: 700;
+
+    @media screen and (max-width: 760px) {
+      font-size: 22px;
+    }
+
+    @media screen and (max-width: 460px) {
+      font-size: 18px;
+    }
   }
 
   &__close-btn {
@@ -276,6 +300,14 @@ function selectShop(shop) {
     &:hover {
       color: red;
     }
+
+    @media screen and (max-width: 760px) {
+      font-size: 22px;
+    }
+
+    @media screen and (max-width: 460px) {
+      font-size: 18px;
+    }
   }
 
   &__main-section, &__shop-section {
@@ -285,12 +317,28 @@ function selectShop(shop) {
     width: 100%;
     overflow-y: auto;
     flex: 1;
+
+    @media screen and (max-width: 760px) {
+      padding: 12px;
+    }
+
+    @media screen and (max-width: 460px) {
+      padding: 8px;
+    }
   }
 
   &__specs-title, &__shops-title {
     font-size: 22px;
     font-weight: 700;
     margin-bottom: 8px;
+
+    @media screen and (max-width: 760px) {
+      font-size: 18px;
+    }
+
+    @media screen and (max-width: 460px) {
+      font-size: 16px;
+    }
   }
 
   &__specs-table {
@@ -308,12 +356,24 @@ function selectShop(shop) {
     font-size: 18px;
     font-weight: 700;
     padding: 4px 0 4px 0;
+
+    @media screen and (max-width: 460px) {
+      font-size: 14px;
+    }
   }
 
-  &__spec-label {
+  &__spec-value {
     font-size: 18px;
-    font-weight: 500;
+    font-weight: 400;
     padding: 4px 0 4px 0;
+
+    @media screen and (max-width: 760px) {
+      font-size: 16px;
+    }
+
+    @media screen and (max-width: 460px) {
+      font-size: 14px;
+    }
   }
 }
 
@@ -327,15 +387,44 @@ function selectShop(shop) {
   margin-bottom: 16px;
   width: 950px;
 
+  @media screen and (max-width: 1300px) {
+    width: 100%;
+  }
+
   &__img-block {
     width: 80px;
-    height: 80px;
+    max-height: 80px;
+    height: auto;
+
+    @media screen and (max-width: 1080px) {
+      width: 64px;
+      max-height: 64px;
+      height: auto;
+    }
+
+    @media screen and (max-width: 760px) {
+      width: 42px;
+      max-height: 42px;
+      height: auto;
+    }
   }
 
   &__img {
     width: 80px;
     height: auto;
     max-height: 80px;
+
+    @media screen and (max-width: 1080px) {
+      width: 64px;
+      max-height: 64px;
+      height: auto;
+    }
+
+    @media screen and (max-width: 760px) {
+      width: 42px;
+      max-height: 42px;
+      height: auto;
+    }
   }
 
   &__content-block {
@@ -344,6 +433,11 @@ function selectShop(shop) {
     align-items: flex-start;
     flex-direction: column;
     width: 830px;
+
+    @media screen and (max-width: 1300px) {
+      margin-left: 8px;
+      width: 100%;
+    }
   }
 
   &__info-block {
@@ -351,6 +445,18 @@ function selectShop(shop) {
     justify-content: space-between;
     align-items: center;
     width: 100%;
+
+    @media screen and (max-width: 760px) {
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    @media screen and (max-width: 460px) {
+      align-items: flex-start;
+      justify-content: flex-start;
+      flex-direction: column;
+    }
   }
 
   &__item-name {
@@ -358,30 +464,109 @@ function selectShop(shop) {
     line-height: 24px;
     font-weight: 700;
     margin-bottom: 8px;
+
+    @media screen and (max-width: 1300px) {
+      font-size: 22px;
+      line-height: 22px;
+    }
+
+    @media screen and (max-width: 760px) {
+      font-size: 20px;
+      margin-bottom: 0;
+    }
+
+    @media screen and (max-width: 460px) {
+      font-size: 18px;
+      margin-bottom: 0;
+    }
   }
 
   &__link, &__in-stock, &__out-of-stock, &__price {
     font-size: 22px;
     padding: 8px 0 8px 0;
+
+    @media screen and (max-width: 1300px) {
+      font-size: 18px;
+      line-height: 18px;
+    }
+
+    @media screen and (max-width: 900px) {
+      font-size: 16px;
+      line-height: 16px;
+    }
+
+    @media screen and (max-width: 460px) {
+      font-size: 16px;
+      margin-bottom: 0;
+    }
   }
 
   &__link {
-    color: #4361ee;
+    color: #0000FF;
     text-decoration: underline;
     font-weight: 500;
     width: 360px;
+
+    @media screen and (max-width: 1300px) {
+      width: 38%;
+    }
+
+    @media screen and (max-width: 900px) {
+      width: auto;
+    }
+
+    @media screen and (max-width: 760px) {
+      width: 50%;
+    }
+
+    @media screen and (max-width: 460px) {
+      width: 100%;
+    }
   }
 
   &__in-stock {
     color: green;
+
+    @media screen and (max-width: 760px) {
+      width: 25%;
+      text-align: end;
+    }
+
+    @media screen and (max-width: 460px) {
+      width: 100%;
+      text-align: start;
+      padding: 2px 0px;
+    }
   }
 
   &__out-of-stock {
     color: red;
+
+    @media screen and (max-width: 760px) {
+      width: 25%;
+      text-align: end;
+    }
+
+    @media screen and (max-width: 460px) {
+      width: 100%;
+      text-align: start;
+      padding: 2px 0px;
+    }
   }
 
   &__price {
     font-weight: 700;
+
+    @media screen and (max-width: 760px) {
+      width: 25%;
+      text-align: end;
+    }
+
+    @media screen and (max-width: 460px) {
+      width: 100%;
+      text-align: start;
+      padding: 2px 0px;
+    }
   }
 
   &__select-btn {
@@ -397,6 +582,21 @@ function selectShop(shop) {
 
     &:hover {
       background: #4895ef;
+    }
+
+    @media screen and (max-width: 1080px) {
+      font-size: 20px;
+    }
+
+    @media screen and (max-width: 760px) {
+      font-size: 18px;
+      width: auto;
+    }
+
+    @media screen and (max-width: 460px) {
+      font-size: 16px;
+      width: auto;
+      margin-top: 4px;
     }
   }
 }

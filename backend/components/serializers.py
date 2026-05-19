@@ -5,14 +5,15 @@ from prices.models import ShopItem
 from django.db import models
 from django.contrib.auth.models import User
 from .models import Profile, SavedBuild
+from django.core.cache import cache
 
 class BaseComponentSerializer(serializers.ModelSerializer):
     min_price = serializers.SerializerMethodField()
     shop_items = serializers.SerializerMethodField()
 
     def get_min_price(self, obj):
-        # model = obj._meta.model
-        ct = ContentType.objects.get_for_model(obj._meta.model)
+        model = obj._meta.model
+        ct = ContentType.objects.get_for_model(model)
         min_price = ShopItem.objects.filter(
             content_type=ct,
             object_id=obj.id,

@@ -173,10 +173,42 @@ const getCategoryIcon = (key) => {
     &:hover {
         box-shadow: 0 0 6px rgba(0,0,0,0.2);
     }
+
+    @media screen and (max-width: 1300px) {
+        width: 98%;
+    }
+
+    @media screen and (max-width: 1080px) {
+        width: 100%;
+    }
+
+    @media screen and (max-width: 760px) {
+        padding: 8px;
+        margin-bottom: 10px;
+    }
     
     &__img-block, &__img {
         width: 80px;
-        height: 80px;
+        max-height: 80px;
+        height: auto;
+
+        @media screen and (max-width: 760px) {
+            width: 60px;
+            max-height: 60px;
+            height: auto;
+        }
+
+        @media screen and (max-width: 550px) {
+            width: 44px;
+            max-height: 44px;
+            height: auto;
+        }
+
+        @media screen and (max-width: 460px) {
+            width: 38px;
+            max-height: 38px;
+            height: auto;
+        }
     }
 
     &__info-block, &__empty-block {
@@ -185,11 +217,50 @@ const getCategoryIcon = (key) => {
         align-items: flex-start;
         flex-direction: column;
         width: 596px;
+
+        @media screen and (max-width: 1300px) {
+            width: calc(100% - 80px - 196px);
+        }
+
+        @media screen and (max-width: 760px) {
+            width: calc(100% - 80px - 140px);
+        }
+
+        @media screen and (max-width: 550px) {
+            width: calc(100% - 80px - 92px);
+        }
+
+        @media screen and (max-width: 460px) {
+            width: calc(100% - 80px - 66px);
+        }
     }
 
     &__name, &__title, &__price {
         font-size: 28px;
-        // line-height: 28px;
+        @media screen and (max-width: 760px) {
+            font-size: 22px;
+        }
+
+        @media screen and (max-width: 550px) {
+            font-size: 18px;
+            line-height: 22px;
+        }
+
+        @media screen and (max-width: 460px) {
+            font-size: 16px;
+            line-height: 18px;
+        }
+    }
+
+    &__name {
+        line-height: 30px;
+        @media screen and (max-width: 550px) {
+            line-height: 22px;
+        }
+        @media screen and (max-width: 460px) {
+            font-size: 16px;
+            line-height: 18px;
+        }
     }
 
     &__name, &__price {
@@ -208,9 +279,26 @@ const getCategoryIcon = (key) => {
     &__shop-name, &__empty-text, &__compatibility {
         font-size: 22px;
         line-height: 22px;
-        // padding-top: 4px;
-        // padding-bottom: 4px;
         margin-bottom: 8px;
+
+        @media screen and (max-width: 760px) {
+            font-size: 18px;
+            line-height: 18px;
+        }
+
+        @media screen and (max-width: 550px) {
+            font-size: 16px;
+            line-height: 16px;
+        }
+
+        @media screen and (max-width: 460px) {
+            font-size: 14px;
+            line-height: 14px;
+        }
+    }
+
+    &__shop-name {
+        margin-top: 6px;
     }
 
     &__compatibility-wrapper {
@@ -238,11 +326,20 @@ const getCategoryIcon = (key) => {
         padding: 8px;
         border-radius: 4px;
         z-index: 1000;
+
+        @media screen and (max-width: 760px) {
+            max-width: 300px;
+            font-size: 16px;
+        }
     }
 
     &__empty-text {
         font-size: 18px;
         color: #666;
+
+        @media screen and (max-width: 760px) {
+            font-size: 16px;
+        }
     }
 
     &__order-block {
@@ -251,6 +348,22 @@ const getCategoryIcon = (key) => {
         align-items: flex-end;
         flex-direction: column;
         width: 212px;
+
+        @media screen and (max-width: 1300px) {
+            width: 170px;
+        }
+
+        @media screen and (max-width: 760px) {
+            width: 140px;
+        }
+
+        @media screen and (max-width: 550px) {
+            width: 120px;
+        }
+
+        @media screen and (max-width: 460px) {
+            width: 100px;
+        }
     }
 
     &__btn {
@@ -276,6 +389,15 @@ const getCategoryIcon = (key) => {
             margin-top: 8px;
             padding-top: 4px;
             padding-bottom: 4px;
+
+            @media screen and (max-width: 460px) {
+                font-size: 14px;
+                line-height: 14px;
+            }
+        }
+
+        @media screen and (max-width: 550px) {
+            font-size: 18px;
         }
     }
 }

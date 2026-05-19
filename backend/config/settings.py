@@ -194,3 +194,21 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(hour=9, minute=0),
     },
 }
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'TIMEOUT': 86400,
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
+CACHE_TTL = {
+    'component_list': 604800,
+    'component_detail': 604800,
+    'prices': 86400,
+    'filter_options': 86400,
+}
