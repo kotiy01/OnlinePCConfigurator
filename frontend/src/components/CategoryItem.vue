@@ -297,6 +297,10 @@ const getCategoryIcon = (key) => {
         }
     }
 
+    &__compatibility {
+        text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+    }
+
     &__shop-name {
         margin-top: 6px;
     }

@@ -24,6 +24,18 @@
         @select="onComponentSelected"
       />
     </div>
+
+    <div class="main__content-block content-block">
+      <div class="content-block__main-text-container">
+        <div class="content-block__main-text-img">
+          <img class="content-block__main-img" src="../assets/main-img.png" alt="Комплектующие ПК">
+        </div>
+        <div class="content-block__main-text-block">
+          <h2 class="content-block__main-text-title">Собери компьютер сам с помощью онлайн-конфигуратора ПК</h2>
+          <p class="content-block__main-text">Сборка компьютера кажется сложной? Боишься купить процессор, который не подойдёт к материнской плате? Онлайн-конфигуратор ПК с проверкой совместимости решит эти проблемы. Выбирай комплектующие из списка, а система автоматически проверит, подходят ли они друг к другу – сокеты, чипсеты, форм-факторы, мощность блока питания и даже длина видеокарты.<br>Конфигуратор подскажет, если ты ошибёшься: например, процессор AMD не встанет в сокет Intel, а оперативная память DDR5 не заработает на плате с поддержкой только DDR4. Ты можешь быть уверен – собранная система запустится.</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -56,36 +68,20 @@ const currentCategory = ref('')
 const currentCategoryLabel = ref('')
 
 onMounted(async () => {
-  // console.log('=== ConfiguratorView mounted ===')
-  
-  // Загрузка из localStorage
   buildStore.loadFromLocalStorage()
-  // console.log('After localStorage load, components:', JSON.parse(JSON.stringify(buildStore.components)))
   
   const buildId = route.query.build_id
-  // console.log('build_id from URL:', buildId)
-  
+ 
   if (buildId) {
-    // console.log('Loading build from API...')
     try {
       const response = await api.get(`/public-build/${buildId}/`)
-      // console.log('API response status:', response.status)
-      // console.log('API response data:', response.data)
-      
       if (response.data && response.data.build_data && response.data.build_data.components) {
-        // console.log('Components from API:', Object.keys(response.data.build_data.components))
-        
-        // Очистка текущей сборки
         buildStore.clearBuild()
-        // console.log('After clearBuild, components:', buildStore.components)
-        
-        // Загрузка компоненты
         const apiComponents = response.data.build_data.components
         let loadedCount = 0
         
         for (const [category, compData] of Object.entries(apiComponents)) {
           if (compData && compData.id) {
-            // console.log(`Loading ${category}:`, compData.name)
             buildStore.components[category] = compData
             loadedCount++
           }
@@ -94,10 +90,6 @@ onMounted(async () => {
         buildStore.currentBuildId = response.data.id
         buildStore.saveToLocalStorage()
         
-        // console.log(`Loaded ${loadedCount} components`)
-        // console.log('Final components:', JSON.parse(JSON.stringify(buildStore.components)))
-        
-        // Принудительное обновление UI
         window.dispatchEvent(new Event('storage'))
       } else {
         console.warn('Invalid build data structure:', response.data)
@@ -171,6 +163,50 @@ function onComponentSelected(selectedItem) {
   &__items {
     flex: 2;
     min-width: 0;
+  }
+}
+
+.content-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 80%;
+  margin-top: 40px;
+
+  &__main-text-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &__main-text-img {
+    width: 35%;
+    height: auto;
+  }
+
+  &__main-img {
+    width: 100%;
+    height: auto;
+  }
+
+  &__main-text-block {
+    width: 65%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+  }
+
+  &__main-text-title {
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+
+  &__main-text {
+    font-size: 18px;
+    line-height: 28px;
   }
 }
 </style>

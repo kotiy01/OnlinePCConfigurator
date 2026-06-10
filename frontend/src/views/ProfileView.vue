@@ -5,6 +5,7 @@
       <p class="profile-container__text"><strong>Имя пользователя:</strong> {{ authStore.currentUser?.username }}</p>
       <p class="profile-container__text"><strong>Email:</strong> {{ authStore.currentUser?.email }}</p>
       <p class="profile-container__text"><strong>Дата регистрации:</strong> {{ formatDate(authStore.currentUser?.date_joined) }}</p>
+      <p class="profile-container__text"><strong>Количество сборок:</strong> {{ buildStore.savedBuilds.length }}</p>
     </div>
     
     <div class="profile-container__saved-builds">
@@ -32,7 +33,7 @@
                 <span class="build-item__comp-category">{{ getCategoryName(category) }}:</span>
                 <span class="build-item__comp-name">{{ component?.name || 'Не выбран' }}</span>
                 <span class="build-item__comp-price">{{ component?.price ? formatPrice(component.price) + ' ₽' : '—' }}</span>
-                <span class="build-item__comp-shop">{{ component?.shop_name || '' }}</span>
+                <a :href="component?.url" target="_blank" class="build-item__comp-shop">{{ component?.shop_name || '' }}</a>
               </div>
             </div>
             <div class="build-item__btns-block">

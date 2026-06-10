@@ -203,6 +203,11 @@ const saveBuild = async () => {
     cursor: pointer;
     font-size: 16px;
     font-weight: 500;
+    transition: .2s;
+
+    &:hover {
+      background: #09bf09;
+    }
   }
 
   &__modal-overlay {
@@ -248,6 +253,11 @@ const saveBuild = async () => {
     border-radius: 4px;
     cursor: pointer;
     width: 66%;
+    transition: .2s;
+
+    &:hover {
+      background: #09bf09;
+    }
   }
 
   &__cancel-btn {
@@ -258,6 +268,11 @@ const saveBuild = async () => {
     border-radius: 4px;
     cursor: pointer;
     width: 30%;
+    transition: .2s;
+
+    &:hover {
+      opacity: 0.7;
+    }
   }
 }
 </style>
